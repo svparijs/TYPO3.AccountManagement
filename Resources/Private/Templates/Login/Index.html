@@ -1,0 +1,36 @@
+<f:layout name="Default" />
+
+<f:section name="Title">Account - Login</f:section>
+
+<f:section name="Content">
+	<f:form name="login" class="form-horizontal well" action="authenticate">
+		<fieldset>
+			<div id="legend">
+				<legend class="">Login</legend>
+			<f:flashMessages class="alert" />
+			</div>
+			<div class="control-group">
+				<!-- Username -->
+				<label class="control-label"  for="username">Username</label>
+				<div class="controls">
+				<f:form.textfield id="username" type="text" placeholder="Your E-mail address..." class="input-large" name="__authentication[TYPO3][Flow][Security][Authentication][Token][UsernamePassword][username]" value="{username}" />
+				</div>
+			</div>
+
+			<div class="control-group">
+				<!-- Password-->
+				<label class="control-label" for="password">Password</label>
+				<div class="controls">
+				<f:form.textfield id="password" type="password" placeholder="Your password..." class="input-large" name="__authentication[TYPO3][Flow][Security][Authentication][Token][UsernamePassword][password]" />
+				</div>
+			</div>
+
+			<div class="control-group">
+				<!-- Button -->
+				<div class="controls">
+					<button class="btn btn-success">Login</button>
+				</div>
+			</div>
+		</fieldset>
+	</f:form>
+</f:section>

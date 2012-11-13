@@ -1,8 +1,8 @@
 <?php
-namespace Svparijs\BibleStudies\Command;
+namespace Security\Manager\Command;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Svparijs.BibleStudies". *
+ * This script belongs to the TYPO3 Flow package "Security.Manager". *
  *                                                                        *
  *                                                                        */
 

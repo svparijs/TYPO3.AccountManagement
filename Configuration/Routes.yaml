@@ -1,0 +1,21 @@
+#                                                                        #
+# Default routes configuration for the Security.Manager package          #
+#                                                                        #
+-
+  name: 'Authentication'
+  uriPattern: 'login(/{@action}.{@format})'
+  defaults:
+    '@package':    'Security.Manager'
+    '@controller': 'Login'
+    '@action':     'index'
+    '@format':     'html'
+  appendExceedingArguments: true
+-
+  name: 'Redirect Login screen'
+  uriPattern: 'login'
+  defaults:
+    '@package':    'Security.Manager'
+    '@controller': 'Login'
+    '@action':     'redirect'
+    '@format':     'html'
+    appendExceedingArguments: true

@@ -4,11 +4,22 @@
 		<meta charset="utf-8">
 		<title><f:render section="Title" /></title>
 		<f:base />
+		
+		<link rel="stylesheet" type="text/css" href="{f:uri.resource(path:'Css/bootstrap.css')}" />
+		<link rel="stylesheet" type="text/css" href="{f:uri.resource(path:'Css/application.css')}" />
 	</head>
 	<body>
-		<f:flashMessages class="flashmessages" />
+		<div id="wrap">
+			<div class="container content">
+				<div class="row">
+					<div class="offset3 span6 loginbox">
+						<f:render section="Content" />
+					</div>
+				</div>
+			</div>
+			<div id="push"></div>
+		</div>
 
-		<h1><f:render section="Title" /></h1>
-		<f:render section="Content" />
+		<f:render partial="Footer" />
 	</body>
 </html>
