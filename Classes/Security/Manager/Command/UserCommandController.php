@@ -2,7 +2,7 @@
 namespace Security\Manager\Command;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Security.Manager". *
+ * This script belongs to the TYPO3 Flow package "Security.Manager".      *
  *                                                                        *
  *                                                                        */
 
@@ -54,7 +54,7 @@ class UserCommandController extends \TYPO3\Flow\Cli\CommandController {
 	 * @return void
 	 */
 	public function createCommand($username, $password, $firstName, $lastName, $roles = NULL) {
-		$account = $this->accountRepository->findByAccountIdentifierAndAuthenticationProviderName($username, 'Typo3BackendProvider');
+		$account = $this->accountRepository->findByAccountIdentifierAndAuthenticationProviderName($username, 'DefaultProvider');
 		if ($account instanceof \TYPO3\Flow\Security\Account) {
 			$this->outputLine('User "%s" already exists.', array($username));
 			$this->quit(1);
