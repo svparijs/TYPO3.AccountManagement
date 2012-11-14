@@ -6,3 +6,6 @@ TYPO3:
         providers:
           DefaultProvider:
             provider: PersistedUsernamePasswordProvider
+Security:
+  Manager:
+    register: TRUE

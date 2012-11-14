@@ -2,14 +2,14 @@
 namespace Security\Manager\Controller;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Svparijs.BibleStudies". *
+ * This script belongs to the TYPO3 Flow package "Security.Manager".      *
  *                                                                        *
  *                                                                        */
 
 use TYPO3\Flow\Annotations as Flow;
 
 /**
- * A controller which allows for logging into the backend
+ * A controller which allows for loggin into a application
  *
  * @Flow\Scope("singleton")
  */
@@ -22,24 +22,6 @@ class LoginController extends \TYPO3\Flow\Security\Authentication\Controller\Abs
 	protected $accessDecisionManager;
 
 	/**
-     * @var \TYPO3\Flow\Security\AccountRepository
-     * @Flow\Inject
-     */
-    protected $accountRepository;
-
-	/**
-	 * @Flow\Inject
-	 * @var \TYPO3\Party\Domain\Repository\PartyRepository
-	 */
-	protected $partyRepository;
-
-	/**
-	 * @Flow\Inject
-	 * @var \TYPO3\Flow\Security\Cryptography\HashService
-	 */
-	protected $hashService;
-
-	/**
 	 * Index action
 	 *
 	 * @return void
@@ -48,6 +30,14 @@ class LoginController extends \TYPO3\Flow\Security\Authentication\Controller\Abs
 		$this->view->assign('username', $username);
 		$this->view->assign('hostname', $this->request->getHttpRequest()->getBaseUri()->getHost());
 		$this->view->assign('date', new \DateTime());
+	}
+
+	/**
+	 *
+	 * @return void
+	 */
+	public function signedInAction(){
+
 	}
 
 	/**
@@ -80,7 +70,7 @@ class LoginController extends \TYPO3\Flow\Security\Authentication\Controller\Abs
 		if ($originalRequest !== NULL) {
 			$this->redirectToRequest($originalRequest);
 		}
-		$this->redirect('index', 'Overview\Overview');
+		$this->redirect('signedIn');
 	}
 
 	/**
@@ -92,17 +82,9 @@ class LoginController extends \TYPO3\Flow\Security\Authentication\Controller\Abs
 		parent::logoutAction();
 
 		switch ($this->request->getFormat()) {
-			#case 'extdirect' :
-			#case 'json' :
-			#	$this->view->assign('value',
-			#		array(
-			#			'success' => TRUE
-			#		)
-			#	);
-			#	break;
 			default :
 				$this->flashMessageContainer->addMessage(new \TYPO3\Flow\Error\Notice('Successfully logged out.', 1318421560));
-				$this->redirect('login');
+				$this->redirect('index');
 			break;
 		}
 	}
