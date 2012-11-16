@@ -1,15 +1,41 @@
 <f:layout name="Default" />
 
-<f:section name="Title">Index view of Register controller</f:section>
+<f:section name="Title">A list of registers</f:section>
 
 <f:section name="Content">
-	<h1>A freshly created Fluid template!</h1>
-	<p>Some data set by the controller:</p>
-	<ul>
-		
-		<f:for each="{foos}" as="foo">
-			<li>{foo}</li>
-		</f:for>
-		
-	</ul>
+	<div clas="row">
+		<div class="span8 list-alignment">
+			<f:if condition="{accounts}">
+				<f:then>
+					<table class="table table-striped">
+						<tr>
+							<th width="35%">Username</th>
+							<th width="30%">Accounts: <f:count subject="{accounts}"/></th>
+							<th width="35%" colspan="2">Options</th>
+						</tr>
+						<f:for each="{accounts}" as="account">
+							<tr>
+								<td colspan="2">
+									<f:link.action action="show" arguments="{account: account}">{account.accountidentifier}</f:link.action>
+								</td>
+								<td>
+									<f:link.action class="btn btn-primary" action="edit" arguments="{account: account}"><i class="icon-edit icon-white"></i> Edit</f:link.action>
+								</td>
+								<td>
+								<f:link.action class="btn btn-danger" action="delete" arguments="{account: account}"><i class="icon-trash icon-white"></i> Delete</f:link.action>
+								</td>
+							</tr>
+						</f:for>
+					</table>
+				</f:then>
+				<f:else>
+					<p>No accounts registered yet.</p>
+				</f:else>
+			</f:if>
+			<p><f:link.action class="btn" action="back">Back</f:link.action></p>
+		</div>
+		<div class="span3 list-alignment">
+			<p><f:link.action class="btn btn-success btn-large" action="new"><i class="icon-pencil icon-white"></i> Create account</f:link.action></p>
+		</div>
+	</div>
 </f:section>

@@ -1,0 +1,59 @@
+<f:layout name="Default" />
+
+<f:section name="Title">New register</f:section>
+
+<f:section name="Content">
+	<div class="form-alignment"></div>
+		<div class="row well">
+		<f:form action="create" name="account">
+			<fieldset class="span5">
+				<legend>User</legend>
+
+				<div class="control-group">
+					<label class="control-label" for="identifier">Username</label>
+					<div class="controls">
+						<f:form.textfield name="identifier" id="identifier" placeholder="Enter a username..."/>
+					</div>
+				</div>
+
+				<div class="control-group">
+					<label class="control-label" for="password[0]">Password</label>
+					<div class="controls">
+						<f:form.textfield type="password" name="password[0]" id="password[0]" placeholder="Enter your password..." />
+					</div>
+				</div>
+
+				<div class="control-group">
+					<label class="control-label" for="password[1]">Repeat password</label>
+					<div class="controls">
+						<f:form.textfield type="password" name="password[1]" id="password[1]" placeholder="Repeat your password..." />
+					</div>
+				</div>
+			</fieldset>
+
+			<fieldset class="span5">
+				<legend>Personal Data</legend>
+
+				<div class="control-group">
+					<label class="control-label" for="firstName">First Name</label>
+					<div class="controls">
+						<f:form.textfield name="firstName" id="firstName" placeholder="Enter your firstname..." />
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="lastName">Last Name</label>
+					<div class="controls">
+						<f:form.textfield name="lastName" id="lastName" placeholder="Enter your lastname..." />
+					</div>
+				</div>
+			</fieldset>
+
+			<div class="span10 form-actions form-footer">
+				<div class="pull-right">
+					<f:link.action class="btn">Cancel</f:link.action>
+					<f:form.submit value="Register account" class="btn btn-primary"/>
+				</div>
+			</div>
+		</f:form>
+	</div>
+</f:section>
