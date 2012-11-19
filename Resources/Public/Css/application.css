@@ -18,5 +18,9 @@ footer {
 /* Position loginbox */
 .form-alignment {
 	padding-top: 250px;
+}
+
+.list-alignment {
+	padding-top: 100px;
 
 }
