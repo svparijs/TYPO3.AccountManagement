@@ -1,1 +1,13 @@
-{"name":"security\/manager","type":"typo3-flow-package","description":"","require":{"typo3\/flow":"*"},"autoload":{"psr-0":{"Security\\Manager":"Classes"}}}
+{
+	"name":"security\/manager",
+	"type":"typo3-flow-bkwi",
+	"description":"",
+	"require":{
+		"typo3\/flow":"*"
+	},
+	"autoload":{
+		"psr-0":{
+			"Security\\Manager":"Classes"
+		}
+	}
+}
