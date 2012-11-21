@@ -12,7 +12,7 @@
   appendExceedingArguments: true
 
 -
-  name: 'all other security stuff'
+  name: 'all other security controller actions'
   uriPattern: '{@controller}/{@action}'
   defaults:
     '@package':    'Security.Manager'
