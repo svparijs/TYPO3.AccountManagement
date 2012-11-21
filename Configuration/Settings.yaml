@@ -6,6 +6,10 @@ TYPO3:
         providers:
           DefaultProvider:
             provider: PersistedUsernamePasswordProvider
+            entryPoint: 'WebRedirect'
+            entryPointOptions:
+              uri: 'login/index'
+
 Security:
   Manager:
     register: TRUE

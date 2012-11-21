@@ -10,12 +10,11 @@
     '@action':     'index'
     '@format':     'html'
   appendExceedingArguments: true
+
 -
-  name: 'Redirect Login screen'
-  uriPattern: 'login'
+  name: 'all other security stuff'
+  uriPattern: '{@controller}/{@action}'
   defaults:
     '@package':    'Security.Manager'
-    '@controller': 'Login'
-    '@action':     'redirect'
     '@format':     'html'
-    appendExceedingArguments: true
+  appendExceedingArguments: true
