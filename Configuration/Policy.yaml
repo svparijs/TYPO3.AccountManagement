@@ -1,14 +1,7 @@
-#                                                                        #
-# Security policy for the TYPO3 package                                  #
-#                                                                        #
-# Security policy definition                                             #
-#                                                                        #
-# This file contains the security policy configuration for the           #
-# Blog package                                                           #
-
 resources:
   methods:
     Security_ManagerSignedInMethods: 'method(Security\Manager\Controller\LoginController->(signedIn)Action())'
+    Security_ManagerAccountMethods: 'method(Security\Manager\Controller\RegisterController->(index|new|edit|update|delete)Action())'
 roles:
   Editor: []
   Administrator: []
@@ -16,6 +9,8 @@ acls:
   Administrator:
     methods:
       Security_ManagerSignedInMethods: GRANT
+      Security_ManagerAccountMethods: GRANT
   Editor:
     methods:
       Security_ManagerSignedInMethods: GRANT
+      Security_ManagerAccountMethods: GRANT
