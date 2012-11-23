@@ -4,25 +4,49 @@
 
 <f:section name="Content">
 	<div clas="row">
-		<div class="span8 list-alignment">
+		<div class="span12 list-alignment">
+			<f:render partial="FlashMessages" />
 			<f:if condition="{accounts}">
 				<f:then>
 					<table class="table table-striped">
 						<tr>
-							<th width="35%">Username</th>
-							<th width="30%">Accounts: <f:count subject="{accounts}"/></th>
-							<th width="35%" colspan="2">Options</th>
+							<th width="60%" colspan="5">
+								<f:link.action class="pull-right btn btn-success btn-large" action="new"><i class="icon-user icon-white"></i> Create account</f:link.action>
+								<h4>Authenticated Accounts</h4>
+							</th>
+						</tr>
+						<tr>
+							<th width="30%">Username</th>
+							<th width="15%">Creation Date</th>
+							<th width="15%">Roles</th>
+							<th width="15%">Status</th>
+							<th width="10%">Options</th>
 						</tr>
 						<f:for each="{accounts}" as="account">
 							<tr>
-								<td colspan="2">
+								<td>
 									<f:link.action action="show" arguments="{account: account}">{account.accountidentifier}</f:link.action>
 								</td>
+								<td><f:format.date>{account.creationdate}</f:format.date></td>
+								<td><f:for each="{account.roles}" as="role">{role}</f:for></td>
+								<td><span class="label label-success">Active</span></td>
 								<td>
-									<f:link.action class="btn btn-primary" action="edit" arguments="{account: account}"><i class="icon-edit icon-white"></i> Edit</f:link.action>
-								</td>
-								<td>
-								<f:link.action class="btn btn-danger" action="delete" arguments="{account: account}"><i class="icon-trash icon-white"></i> Delete</f:link.action>
+									<div class="btn-group">
+										<button class="btn">Actions</button>
+										<button class="btn dropdown-toggle" data-toggle="dropdown">
+											<span class="caret"></span>
+										</button>
+										<ul class="dropdown-menu">
+											<!-- dropdown menu links -->
+											<li>
+												<f:link.action action="edit" arguments="{account: account}"><i class="icon-edit"></i> Edit</f:link.action>
+											</li>
+											<li class="divider"></li>
+											<li>
+												<f:link.action action="delete" arguments="{account: account}"><i class="icon-trash"></i> Delete</f:link.action>
+											</li>
+										</ul>
+									</div>
 								</td>
 							</tr>
 						</f:for>
@@ -33,9 +57,6 @@
 				</f:else>
 			</f:if>
 			<p><f:link.action class="btn" action="back">Back</f:link.action></p>
-		</div>
-		<div class="span3 list-alignment">
-			<p><f:link.action class="btn btn-success btn-large" action="new"><i class="icon-pencil icon-white"></i> Create account</f:link.action></p>
 		</div>
 	</div>
 </f:section>

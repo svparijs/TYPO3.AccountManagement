@@ -1,15 +1,17 @@
 {namespace secure=Security\Manager\ViewHelpers}
 <f:layout name="Default" />
 
-<f:section name="Title">Index view of Register controller</f:section>
+<f:section name="Title"><f:translate id="authorized.title">Dummy Authenticated View</f:translate></f:section>
 
 <f:section name="Content">
 	<div class="row form-alignment">
 		<div class="offset2 span8 well">
-			<h1>A dummy authenticated page.</h1>
-			<p>Your are authenticated with user: <secure:account /></p>
+			<h1><f:translate id="authorized.header">A dummy authenticated page</f:translate></h1>
+			<p><f:translate id="authorized.description">Your are authenticated with user:</f:translate> <secure:account /></p>
 
-			<f:link.action class="btn" controller="Login" action="logout"><i class="icon-off"></i> <f:translate id="authentication.logout">Logout</f:translate></f:link.action>
+			<p><f:link.action class="pull-left btn" controller="Login" action="logout"><i class="icon-off"></i> <f:translate id="authentication.logout">Logout</f:translate></f:link.action>
+			<f:link.action class="pull-right btn btn-primary" controller="Register" action="index"><i class="icon-list icon-white"></i> <f:translate id="account.index">Manage Accounts</f:translate></f:link.action>
+			</p>
 		</div>
 	</div>
 </f:section>

@@ -5,6 +5,15 @@
 			<trans-unit id="authentication.header" xml:space="preserve">
 				<source>Login</source>
 			</trans-unit>
+			<trans-unit id="authorized.title" xml:space="preserve">
+				<source>Dummy Authenticated View</source>
+			</trans-unit>
+			<trans-unit id="authorized.header" xml:space="preserve">
+				<source>A dummy authenticated page</source>
+			</trans-unit>
+			<trans-unit id="authorized.description" xml:space="preserve">
+				<source>Your are authenticated with user:</source>
+			</trans-unit>
 			<trans-unit id="authentication.required" xml:space="preserve">
 				<source>Authentication required</source>
 			</trans-unit>
@@ -31,6 +40,9 @@
 			</trans-unit>
 			<trans-unit id="register.account" xml:space="preserve">
 				<source>Register account?</source>
+			</trans-unit>
+			<trans-unit id="account.index" xml:space="preserve">
+				<source>Manage Accounts</source>
 			</trans-unit>
 			<trans-unit id="update" xml:space="preserve">
 				<source>Update</source>
