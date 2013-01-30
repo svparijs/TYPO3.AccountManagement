@@ -1,13 +1,13 @@
 {
-	"name": "security/manager",
-	"type": "typo3-flow-bkwi",
+	"name": "typo3/usermanagement",
+	"type": "typo3-flow-package",
 	"description": "",
 	"require": {
 		"typo3/flow": "*"
 	},
 	"autoload": {
 		"psr-0": {
-			"Security\\Manager": "Classes"
+			"TYPO3\\UserManagement": "Classes"
 		}
 	}
 }

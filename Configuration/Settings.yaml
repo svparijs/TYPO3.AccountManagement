@@ -10,6 +10,6 @@ TYPO3:
             entryPointOptions:
               uri: 'login/index'
 
-Security:
-  Manager:
+TYPO3:
+  UserManagement:
     register: TRUE

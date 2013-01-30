@@ -1,8 +1,8 @@
 <?php
-namespace Security\Manager\Command;
+namespace TYPO3\UserManagement\Command;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Security.Manager".      *
+ * This script belongs to the TYPO3 Flow package "TYPO3.UserManagement".      *
  *                                                                        *
  *                                                                        */
 

@@ -1,14 +1,16 @@
-Security.Manager
+TYPO3.UserManagement
 ================
 
 A TYPO3 Flow package that manages accounts and login authentication.
 
-This Security Manager tool is a lightweight single purpose authentication wrapper around a given package.
-The package has the same features that are provided in the security framework of TYPO3.Flow and require only a little
+This User Management tool is a lightweight single purpose authentication wrapper around a given package.
+In addition it handles all user CRUD actions.
+The package is built on same features that are provided in the security framework of TYPO3.Flow and require only a little
 configuration.
 
 Usage:
 - Security layer for any application
+- User Management for any application
 - Inspiration
 
 Authentication setup
@@ -16,10 +18,10 @@ Authentication setup
 
 The initial view will show a login box.
 
-When authenticated but not configured to redirect to a package, it will jump to the signedInAction by default.
-The signedIn view will show you with what "account.identifier" you have been signed into Flow.
+When authenticated but not configured, the package will redirect to the signedInAction by default.
+The signedIn view will show you with what "account.identifier" you have been authenticated.
 
-Through Settings.yaml you will be able to configure options like redirections to a package, open registration for anonymous users
+Through Settings.yaml you will be able to configure options like redirects to a package, open registration for anonymous users
 and so on. The package and its features will grow overtime if there is enough usage and are generic use cases to be applied. Feel
 free to contribute, fork or leave a note.
 
@@ -56,7 +58,7 @@ Account ViewHelper
 
 Add the viewhelper to fluid and call the viewhelper function.
 
-	{namespace secure=Security\Manager\ViewHelpers}
+	{namespace secure=TYPO3\UserManagement\ViewHelpers}
 
 	<secure:account propertyPath="party.name" />
 
@@ -68,15 +70,15 @@ For an example heres how the Security.Manager packages secures itself agains una
 
 	resources:
 	  methods:
-	    Security_ManagerSignedInMethods: 'method(Security\Manager\Controller\LoginController->(signedIn)Action())'
-	    Security_ManagerAccountMethods: 'method(Security\Manager\Controller\RegisterController->(index|new|edit|update|delete)Action())'
+	    TYPO3_UserManagementSignedInMethods: 'method(TYPO3\UserManagement\Controller\LoginController->(signedIn)Action())'
+	    TYPO3_UserManagementAccountMethods: 'method(TYPO3\UserManagement\Controller\RegisterController->(index|new|edit|update|delete)Action())'
 	roles:
 	  Editor: []
 	acls:
 	  Editor:
 	    methods:
-	      Security_ManagerSignedInMethods: GRANT
-	      Security_ManagerAccountMethods: GRANT
+	      TYPO3_UserManagementSignedInMethods: GRANT
+	      TYPO3_UserManagementAccountMethods: GRANT
 
 When the action is unauthorized the TYPO3.Flow framework will redirect the package to a location set with the Settings.yaml configuration.
 

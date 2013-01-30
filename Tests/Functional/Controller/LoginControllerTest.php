@@ -1,8 +1,8 @@
 <?php
-namespace Security\Manager\Tests\Functional\Controller;
+namespace TYPO3\UserManagement\Tests\Functional\Controller;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Security.Manager".			*
+ * This script belongs to the TYPO3 Flow package "TYPO3.UserManagement".  *
  *                                                                        *
  *                                                                        */
 

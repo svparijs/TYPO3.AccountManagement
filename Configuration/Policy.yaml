@@ -1,16 +1,16 @@
 resources:
   methods:
-    Security_ManagerSignedInMethods: 'method(Security\Manager\Controller\LoginController->(signedIn)Action())'
-    Security_ManagerAccountMethods: 'method(Security\Manager\Controller\RegisterController->(index|new|edit|update|delete)Action())'
+    TYPO3_UserManagementSignedInMethods: 'method(TYPO3\UserManagement\Controller\LoginController->(signedIn)Action())'
+    TYPO3_UserManagementAccountMethods: 'method(TYPO3\UserManagement\Controller\RegisterController->(index|new|edit|update|delete)Action())'
 roles:
   Editor: []
   Administrator: []
 acls:
   Administrator:
     methods:
-      Security_ManagerSignedInMethods: GRANT
-      Security_ManagerAccountMethods: GRANT
+      TYPO3_UserManagementSignedInMethods: GRANT
+      TYPO3_UserManagementAccountMethods: GRANT
   Editor:
     methods:
-      Security_ManagerSignedInMethods: GRANT
-      Security_ManagerAccountMethods: GRANT
+      TYPO3_UserManagementSignedInMethods: GRANT
+      TYPO3_UserManagementAccountMethods: GRANT

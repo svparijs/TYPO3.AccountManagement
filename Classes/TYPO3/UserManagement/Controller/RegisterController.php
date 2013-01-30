@@ -1,8 +1,8 @@
 <?php
-namespace Security\Manager\Controller;
+namespace TYPO3\UserManagement\Controller;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Security.Manager".      *
+ * This script belongs to the TYPO3 Flow package "TYPO3.UserManagement".      *
  *                                                                        *
  *                                                                        */
 
@@ -11,7 +11,7 @@ use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\Mvc\Controller\ActionController;
 
 /**
- * Register controller for the Security.Manager package
+ * Register controller for the TYPO3.UserManagement package
  *
  * @Flow\Scope("singleton")
  */
@@ -56,7 +56,7 @@ class RegisterController extends ActionController {
 			$propertyMappingConfigurationForAccount = $this->arguments->getArgument('account')->getPropertyMappingConfiguration();
 			$propertyMappingConfigurationForAccountParty = $propertyMappingConfigurationForAccount->forProperty('party');
 			$propertyMappingConfigurationForAccountPartyName = $propertyMappingConfigurationForAccount->forProperty('party.name');
-			$propertyMappingConfigurationForAccountParty->setTypeConverterOption('TYPO3\Flow\Property\TypeConverter\PersistentObjectConverter', \TYPO3\Flow\Property\TypeConverter\PersistentObjectConverter::CONFIGURATION_TARGET_TYPE, '\Security\Manager\Domain\Model\User');
+			$propertyMappingConfigurationForAccountParty->setTypeConverterOption('TYPO3\Flow\Property\TypeConverter\PersistentObjectConverter', \TYPO3\Flow\Property\TypeConverter\PersistentObjectConverter::CONFIGURATION_TARGET_TYPE, '\TYPO3\UserManagement\Domain\Model\User');
 			foreach (array($propertyMappingConfigurationForAccountParty, $propertyMappingConfigurationForAccountPartyName) as $propertyMappingConfiguration) {
 				$propertyMappingConfiguration->setTypeConverterOption('TYPO3\Flow\Property\TypeConverter\PersistentObjectConverter', \TYPO3\Flow\Property\TypeConverter\PersistentObjectConverter::CONFIGURATION_CREATION_ALLOWED, TRUE);
 				$propertyMappingConfiguration->setTypeConverterOption('TYPO3\Flow\Property\TypeConverter\PersistentObjectConverter', \TYPO3\Flow\Property\TypeConverter\PersistentObjectConverter::CONFIGURATION_MODIFICATION_ALLOWED, TRUE);
@@ -89,9 +89,9 @@ class RegisterController extends ActionController {
 	 * @param string $identifier
 	 * @Flow\Validate(argumentName="identifier", type="NotEmpty")
 	 * @Flow\Validate(argumentName="identifier", type="StringLength", options={ "minimum"=1, "maximum"=255 })
-	 * @Flow\Validate(argumentName="identifier", type="\Security\Manager\Validation\Validator\AccountExistsValidator", options={ "authenticationProviderName"="Typo3BackendProvider" })
+	 * @Flow\Validate(argumentName="identifier", type="\TYPO3\UserManagement\Validation\Validator\AccountExistsValidator", options={ "authenticationProviderName"="Typo3BackendProvider" })
 	 * @param array $password
-	 * @Flow\Validate(argumentName="password", type="\Security\Manager\Validation\Validator\PasswordValidator", options={ "allowEmpty"=0, "minimum"=1, "maximum"=255 })
+	 * @Flow\Validate(argumentName="password", type="\TYPO3\UserManagement\Validation\Validator\PasswordValidator", options={ "allowEmpty"=0, "minimum"=1, "maximum"=255 })
 	 * @param string $firstName
 	 * @Flow\Validate(argumentName="firstName", type="NotEmpty")
 	 * @Flow\Validate(argumentName="firstName", type="StringLength", options={ "minimum"=1, "maximum"=255 })
@@ -99,10 +99,10 @@ class RegisterController extends ActionController {
 	 * @Flow\Validate(argumentName="lastName", type="NotEmpty")
 	 * @Flow\Validate(argumentName="lastName", type="StringLength", options={ "minimum"=1, "maximum"=255 })
 	 * @return void
-	 * @todo Security
+	 * @todo TYPO3
 	 */
 	public function createAction($identifier, array $password, $firstName, $lastName) {
-		$user = new \Security\Manager\Domain\Model\User();
+		$user = new \TYPO3\UserManagement\Domain\Model\User();
 		$name = new \TYPO3\Party\Domain\Model\PersonName('', $firstName, '', $lastName, '', $identifier);
 		$user->setName($name);
 		$this->partyRepository->add($user);
@@ -137,12 +137,12 @@ class RegisterController extends ActionController {
 	/**
 	 * Updates the given account object
 	 *
-	 * @param \TYPO3\Flow\Security\Account $account
+	 * @param \TYPO3\Flow\TYPO3\Account $account
 	 * @param array $password
-	 * @Flow\Validate(argumentName="password", type="\Security\Manager\Validation\Validator\PasswordValidator", options={ "allowEmpty"=1, "minimum"=1, "maximum"=255 })
+	 * @Flow\Validate(argumentName="password", type="\TYPO3\UserManagement\Validation\Validator\PasswordValidator", options={ "allowEmpty"=1, "minimum"=1, "maximum"=255 })
 	 * @return void
 	 * @todo Handle validation errors for account (accountIdentifier) & check if there's another account with the same accountIdentifier when changing it
-	 * @todo Security
+	 * @todo TYPO3
 	 */
 	public function updateAction(\TYPO3\Flow\Security\Account $account, array $password = array()) {
 		$password = array_shift($password);
@@ -158,9 +158,9 @@ class RegisterController extends ActionController {
 	}
 
 	/**
-	 * @param \TYPO3\Flow\Security\Account $account
+	 * @param \TYPO3\Flow\TYPO3\Account $account
 	 * @return void
-	 * @todo Security
+	 * @todo TYPO3
 	 */
 	public function deleteAction(\TYPO3\Flow\Security\Account $account) {
 		if ($this->securityContext->getAccount() === $account) {

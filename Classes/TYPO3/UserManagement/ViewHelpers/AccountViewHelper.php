@@ -1,5 +1,5 @@
 <?php
-namespace Security\Manager\ViewHelpers;
+namespace TYPO3\UserManagement\ViewHelpers;
 
 /*                                                                        *
  * This script belongs to the TYPO3 Flow package "BKWI.Kernkaart".        *

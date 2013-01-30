@@ -1,5 +1,5 @@
 <?php
-namespace Security\Manager\Tests\Unit\ViewHelpers;
+namespace TYPO3\UserManagement\Tests\Unit\ViewHelpers;
 
 /*                                                                        *
  * This script belongs to the TYPO3 Flow package "BKWI.Kernkaart".        *
@@ -37,10 +37,10 @@ class AccountViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$token->setAccount($this->account);
 		$token->setAuthenticationStatus(\TYPO3\Flow\Security\Authentication\TokenInterface::AUTHENTICATION_SUCCESSFUL);
 
-		$mockSecurityContext = $this->getAccessibleMock('\TYPO3\Flow\Security\Context');
+		$mockSecurityContext = $this->getAccessibleMock('\TYPO3\Flow\TYPO3\Context');
 		$mockSecurityContext->expects($this->any())->method('getAuthenticationTokens')->will($this->returnValue(array($token)));
 
-		$viewHelper = new \Security\Manager\ViewHelpers\AccountViewHelper();
+		$viewHelper = new \TYPO3\UserManagement\ViewHelpers\AccountViewHelper();
 		$this->inject($viewHelper, 'securityContext', $mockSecurityContext);
 
 		$this->assertEquals('Dhr. John Doe', $viewHelper->render());

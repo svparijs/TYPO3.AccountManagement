@@ -1,5 +1,5 @@
 <?php
-namespace Security\Manager\Domain\Model;
+namespace TYPO3\UserManagement\Domain\Model;
 
 /*                                                                        *
  * This script belongs to the TYPO3 Flow package "TYPO3.TYPO3".           *
@@ -27,7 +27,7 @@ class User extends Person  {
 	/**
 	 * Preferences of this user
 	 *
-	 * @var \Security\Manager\Domain\Model\UserPreferences
+	 * @var \TYPO3\UserManagement\Domain\Model\UserPreferences
 	 * @ORM\OneToOne
 	 */
 	protected $preferences;
@@ -42,7 +42,7 @@ class User extends Person  {
 	}
 
 	/**
-	 * @return \Security\Manager\Domain\Model\UserPreferences
+	 * @return \TYPO3\UserManagement\Domain\Model\UserPreferences
 	 */
 	public function getPreferences() {
 		return $this->preferences;

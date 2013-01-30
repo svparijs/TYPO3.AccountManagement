@@ -1,5 +1,5 @@
 <?php
-namespace Security\Manager\Domain\Model;
+namespace TYPO3\UserManagement\Domain\Model;
 
 /*                                                                        *
  * This script belongs to the TYPO3 Flow package "TYPO3.TYPO3".           *
