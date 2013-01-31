@@ -8,7 +8,10 @@ TYPO3:
             provider: PersistedUsernamePasswordProvider
             entryPoint: 'WebRedirect'
             entryPointOptions:
-              uri: 'login/index'
+              routeValues:
+                '@package': 'TYPO3.UserManagement'
+                '@controller': 'Login'
+                '@action': 'index'
 
 TYPO3:
   UserManagement:

@@ -2,8 +2,13 @@
 namespace TYPO3\UserManagement\Command;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "TYPO3.UserManagement".      *
+ * This script belongs to the TYPO3 Flow package "TYPO3.UserManagement".  *
  *                                                                        *
+ * It is free software; you can redistribute it and/or modify it under    *
+ * the terms of the GNU General Public License, either version 3 of the   *
+ * License, or (at your option) any later version.                        *
+ *                                                                        *
+ * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
 use TYPO3\Flow\Annotations as Flow;
@@ -50,11 +55,12 @@ class UserCommandController extends \TYPO3\Flow\Cli\CommandController {
 	 * @param string $firstName First name of the user to be created
 	 * @param string $lastName Last name of the user to be created
 	 * @param string $roles A comma separated list of roles to assign
+	 * @param string $authenticationProvider The name of the authentication provider to use
 	 * @Flow\Validate(argumentName="username", type="EmailAddress")
 	 * @return void
 	 */
-	public function createCommand($username, $password, $firstName, $lastName, $roles = NULL) {
-		$account = $this->accountRepository->findByAccountIdentifierAndAuthenticationProviderName($username, 'DefaultProvider');
+	public function createCommand($username, $password, $firstName, $lastName, $roles = '', $authenticationProvider = 'DefaultProvider') {
+		$account = $this->accountRepository->findByAccountIdentifierAndAuthenticationProviderName($username, $authenticationProvider);
 		if ($account instanceof \TYPO3\Flow\Security\Account) {
 			$this->outputLine('User "%s" already exists.', array($username));
 			$this->quit(1);
@@ -66,9 +72,7 @@ class UserCommandController extends \TYPO3\Flow\Cli\CommandController {
 
 		$this->partyRepository->add($user);
 
-		$roles = empty($roles) ? array('Editor') : explode(',', $roles);
-
-		$account = $this->accountFactory->createAccountWithPassword($username, $password, $roles, 'DefaultProvider');
+		$account = $this->accountFactory->createAccountWithPassword($username, $password, explode(',', $roles), $authenticationProvider);
 		$account->setParty($user);
 		$this->accountRepository->add($account);
 		$this->outputLine('Created account "%s".', array($username));
@@ -81,10 +85,11 @@ class UserCommandController extends \TYPO3\Flow\Cli\CommandController {
 	 *
 	 * @param string $username Username of the account to modify
 	 * @param string $password The new password
+	 * @param string $authenticationProvider The name of the authentication provider to use
 	 * @return void
 	 */
-	public function setPasswordCommand($username, $password) {
-		$account = $this->accountRepository->findByAccountIdentifierAndAuthenticationProviderName($username, 'DefaultProvider');
+	public function setPasswordCommand($username, $password, $authenticationProvider = 'DefaultProvider') {
+		$account = $this->accountRepository->findByAccountIdentifierAndAuthenticationProviderName($username, $authenticationProvider);
 		if (!$account instanceof \TYPO3\Flow\Security\Account) {
 			$this->outputLine('User "%s" does not exists.', array($username));
 			$this->quit(1);
@@ -103,10 +108,11 @@ class UserCommandController extends \TYPO3\Flow\Cli\CommandController {
 	 *
 	 * @param string $username The username
 	 * @param string $role Role ot be added to the user
+	 * @param string $authenticationProvider The name of the authentication provider to use
 	 * @return void
 	 */
-	public function addRoleCommand($username, $role) {
-		$account = $this->accountRepository->findByAccountIdentifierAndAuthenticationProviderName($username, 'DefaultProvider');
+	public function addRoleCommand($username, $role, $authenticationProvider = 'DefaultProvider') {
+		$account = $this->accountRepository->findByAccountIdentifierAndAuthenticationProviderName($username, $authenticationProvider);
 		if (!$account instanceof \TYPO3\Flow\Security\Account) {
 			$this->outputLine('User "%s" does not exists.', array($username));
 			$this->quit(1);
@@ -129,10 +135,11 @@ class UserCommandController extends \TYPO3\Flow\Cli\CommandController {
 	 *
 	 * @param string $username Email address of the user
 	 * @param string $role Role ot be removed from the user
+	 * @param string $authenticationProvider The name of the authentication provider to use
 	 * @return void
 	 */
-	public function removeRoleCommand($username, $role) {
-		$account = $this->accountRepository->findByAccountIdentifierAndAuthenticationProviderName($username, 'DefaultProvider');
+	public function removeRoleCommand($username, $role, $authenticationProvider = 'DefaultProvider') {
+		$account = $this->accountRepository->findByAccountIdentifierAndAuthenticationProviderName($username, $authenticationProvider);
 		if (!$account instanceof \TYPO3\Flow\Security\Account) {
 			$this->outputLine('User "%s" does not exists.', array($username));
 			$this->quit(1);

@@ -2,8 +2,13 @@
 namespace TYPO3\UserManagement\Controller;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "TYPO3.UserManagement".      *
+ * This script belongs to the TYPO3 Flow package "TYPO3.UserManagement".  *
  *                                                                        *
+ * It is free software; you can redistribute it and/or modify it under    *
+ * the terms of the GNU General Public License, either version 3 of the   *
+ * License, or (at your option) any later version.                        *
+ *                                                                        *
+ * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
 use TYPO3\Flow\Annotations as Flow;
@@ -24,6 +29,7 @@ class LoginController extends \TYPO3\Flow\Security\Authentication\Controller\Abs
 	/**
 	 * Index action
 	 *
+	 * @param string $username
 	 * @return void
 	 */
 	public function indexAction($username = NULL) {
@@ -70,6 +76,11 @@ class LoginController extends \TYPO3\Flow\Security\Authentication\Controller\Abs
 		if ($originalRequest !== NULL) {
 			$this->redirectToRequest($originalRequest);
 		}
+
+		if(isset($this->settings['Redirection']['signedIn'])) {
+			$redirection = $this->settings['Redirection']['signedIn'];
+			$this->redirect($redirection['Action'], $redirection['Controller'], $redirection['Package']);
+		}
 		$this->redirect('signedIn');
 	}
 
@@ -85,9 +96,10 @@ class LoginController extends \TYPO3\Flow\Security\Authentication\Controller\Abs
 			default :
 				$this->flashMessageContainer->addMessage(new \TYPO3\Flow\Error\Notice('Successfully logged out.', 1318421560));
 				$this->redirect('index');
-			break;
+				break;
 		}
 	}
+
 }
 
 ?>

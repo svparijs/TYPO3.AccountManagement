@@ -1,5 +1,5 @@
 #                                                                        #
-# Default routes configuration for the TYPO3.UserManagement package      #
+# Default routes configuration for the Security.Manager package          #
 #                                                                        #
 -
   name: 'Authentication'
@@ -13,8 +13,22 @@
 
 -
   name: 'all other security controller actions'
-  uriPattern: '{@controller}/{@action}'
+  uriPattern: 'security/{@controller}/{@action}(.{@format})'
   defaults:
     '@package':    'TYPO3.UserManagement'
     '@format':     'html'
+  appendExceedingArguments: true
+
+-
+  name: 'Account action'
+  uriPattern: 'account/{@action}/{account}.{@format}'
+  defaults:
+    '@package':    'TYPO3.UserManagement'
+    '@controller': 'Account'
+    '@action':     'show'
+    '@format':     'html'
+  routeParts:
+    account:
+      objectType:  \TYPO3\Flow\Security\Account
+      uriPattern:  '{accountIdentifier}'
   appendExceedingArguments: true

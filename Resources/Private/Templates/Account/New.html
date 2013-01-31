@@ -1,0 +1,19 @@
+<f:layout name="Default" />
+
+<f:section name="Title">Creat a new account</f:section>
+
+<f:section name="Content">
+	<div class="form-alignment"></div>
+	<div class="row well">
+		<f:form action="create" name="account">
+			<f:render partial="Account/Form" arguments="{_all}" />
+
+			<div class="span10 form-actions form-footer">
+				<div class="pull-right">
+					<f:link.action class="btn" action="index">Cancel</f:link.action>
+					<button class="btn btn-primary"> Create Account </button>
+				</div>
+			</div>
+		</f:form>
+	</div>
+</f:section>

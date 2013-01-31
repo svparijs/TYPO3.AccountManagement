@@ -2,20 +2,23 @@
 namespace TYPO3\UserManagement\Controller;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "TYPO3.UserManagement".      *
+ * This script belongs to the TYPO3 Flow package "TYPO3.UserManagement".  *
  *                                                                        *
+ * It is free software; you can redistribute it and/or modify it under    *
+ * the terms of the GNU General Public License, either version 3 of the   *
+ * License, or (at your option) any later version.                        *
+ *                                                                        *
+ * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
 use TYPO3\Flow\Annotations as Flow;
 
-use TYPO3\Flow\Mvc\Controller\ActionController;
-
 /**
- * Register controller for the TYPO3.UserManagement package
+ * Account controller for the TYPO3.UserManagement package
  *
  * @Flow\Scope("singleton")
  */
-class RegisterController extends ActionController {
+class AccountController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 
 	/**
 	 * @Flow\Inject
@@ -48,6 +51,12 @@ class RegisterController extends ActionController {
 	protected $securityContext;
 
 	/**
+	 * @var \TYPO3\Flow\Security\Policy\PolicyService
+	 * @Flow\Inject
+	 */
+	protected $policyService;
+
+	/**
 	 * @return void
 	 */
 	protected function initializeAction() {
@@ -56,10 +65,23 @@ class RegisterController extends ActionController {
 			$propertyMappingConfigurationForAccount = $this->arguments->getArgument('account')->getPropertyMappingConfiguration();
 			$propertyMappingConfigurationForAccountParty = $propertyMappingConfigurationForAccount->forProperty('party');
 			$propertyMappingConfigurationForAccountPartyName = $propertyMappingConfigurationForAccount->forProperty('party.name');
-			$propertyMappingConfigurationForAccountParty->setTypeConverterOption('TYPO3\Flow\Property\TypeConverter\PersistentObjectConverter', \TYPO3\Flow\Property\TypeConverter\PersistentObjectConverter::CONFIGURATION_TARGET_TYPE, '\TYPO3\UserManagement\Domain\Model\User');
+			$propertyMappingConfigurationForAccountParty->setTypeConverterOption(
+				'TYPO3\Flow\Property\TypeConverter\PersistentObjectConverter',
+				\TYPO3\Flow\Property\TypeConverter\PersistentObjectConverter::CONFIGURATION_TARGET_TYPE,
+				'\TYPO3\UserManagement\Domain\Model\User'
+			);
+
 			foreach (array($propertyMappingConfigurationForAccountParty, $propertyMappingConfigurationForAccountPartyName) as $propertyMappingConfiguration) {
-				$propertyMappingConfiguration->setTypeConverterOption('TYPO3\Flow\Property\TypeConverter\PersistentObjectConverter', \TYPO3\Flow\Property\TypeConverter\PersistentObjectConverter::CONFIGURATION_CREATION_ALLOWED, TRUE);
-				$propertyMappingConfiguration->setTypeConverterOption('TYPO3\Flow\Property\TypeConverter\PersistentObjectConverter', \TYPO3\Flow\Property\TypeConverter\PersistentObjectConverter::CONFIGURATION_MODIFICATION_ALLOWED, TRUE);
+				$propertyMappingConfiguration->setTypeConverterOption(
+					'TYPO3\Flow\Property\TypeConverter\PersistentObjectConverter',
+					\TYPO3\Flow\Property\TypeConverter\PersistentObjectConverter::CONFIGURATION_CREATION_ALLOWED,
+					TRUE
+				);
+				$propertyMappingConfiguration->setTypeConverterOption(
+					'TYPO3\Flow\Property\TypeConverter\PersistentObjectConverter',
+					\TYPO3\Flow\Property\TypeConverter\PersistentObjectConverter::CONFIGURATION_MODIFICATION_ALLOWED,
+					TRUE
+				);
 			}
 		}
 	}
@@ -71,6 +93,35 @@ class RegisterController extends ActionController {
 	 */
 	public function indexAction() {
 		$this->view->assign('accounts', $this->accountRepository->findAll());
+	}
+
+	/**
+	 * Shows a account object
+	 *
+	 * @param \TYPO3\Flow\Security\Account $account
+	 * @return void
+	 */
+	public function showAction(\TYPO3\Flow\Security\Account $account) {
+		$this->view->assign('account', $account);
+	}
+
+	/**
+	 * Shows a form for creating a new account object
+	 *
+	 * @param \TYPO3\Flow\Security\Account $account
+	 * @return void
+	 */
+	public function registerAction(\TYPO3\Flow\Security\Account $account = NULL) {
+		$this->view->assign('account', $account);
+		$this->view->assign('availableRoles', $this->policyService->getRoles());
+	}
+
+	/**
+	 * Show the registration successfull page and redirects to the login page
+	 * @return void
+	 */
+	public function onRegistrationSucces(){
+		$this->redirect('index', 'Login', NULL, array(), 400);
 	}
 
 	/**
@@ -89,9 +140,12 @@ class RegisterController extends ActionController {
 	 * @param string $identifier
 	 * @Flow\Validate(argumentName="identifier", type="NotEmpty")
 	 * @Flow\Validate(argumentName="identifier", type="StringLength", options={ "minimum"=1, "maximum"=255 })
-	 * @Flow\Validate(argumentName="identifier", type="\TYPO3\UserManagement\Validation\Validator\AccountExistsValidator", options={ "authenticationProviderName"="Typo3BackendProvider" })
+	 * @Flow\Validate(argumentName="identifier", type="\TYPO3\UserManagement\Validation\Validator\AccountExistsValidator")
 	 * @param array $password
 	 * @Flow\Validate(argumentName="password", type="\TYPO3\UserManagement\Validation\Validator\PasswordValidator", options={ "allowEmpty"=0, "minimum"=1, "maximum"=255 })
+	 * @param string $email
+	 * @Flow\Validate(argumentName="email", type="NotEmpty")
+	 * @Flow\Validate(argumentName="email", type="\TYPO3\Flow\Validation\Validator\EmailAddressValidator")
 	 * @param string $firstName
 	 * @Flow\Validate(argumentName="firstName", type="NotEmpty")
 	 * @Flow\Validate(argumentName="firstName", type="StringLength", options={ "minimum"=1, "maximum"=255 })
@@ -99,10 +153,10 @@ class RegisterController extends ActionController {
 	 * @Flow\Validate(argumentName="lastName", type="NotEmpty")
 	 * @Flow\Validate(argumentName="lastName", type="StringLength", options={ "minimum"=1, "maximum"=255 })
 	 * @return void
-	 * @todo TYPO3
+	 * @todo Security
 	 */
-	public function createAction($identifier, array $password, $firstName, $lastName) {
-		$user = new \TYPO3\UserManagement\Domain\Model\User();
+	public function createAction($identifier, array $password, $email, $firstName, $lastName, $role) {
+		$user = new \Security\Manager\Domain\Model\User();
 		$name = new \TYPO3\Party\Domain\Model\PersonName('', $firstName, '', $lastName, '', $identifier);
 		$user->setName($name);
 		$this->partyRepository->add($user);
@@ -113,15 +167,6 @@ class RegisterController extends ActionController {
 
 		$this->addFlashMessage('Created a new account.');
 		$this->redirect('index');
-	}
-
-	/**
-	 * Edit account profile
-	 *
-	 * @return void
-	 */
-	public function editProfileAction(){
-		$this->view->assign('account', $this->securityContext->getAccount());
 	}
 
 	/**
@@ -137,12 +182,12 @@ class RegisterController extends ActionController {
 	/**
 	 * Updates the given account object
 	 *
-	 * @param \TYPO3\Flow\TYPO3\Account $account
+	 * @param \TYPO3\Flow\Security\Account $account
 	 * @param array $password
 	 * @Flow\Validate(argumentName="password", type="\TYPO3\UserManagement\Validation\Validator\PasswordValidator", options={ "allowEmpty"=1, "minimum"=1, "maximum"=255 })
 	 * @return void
 	 * @todo Handle validation errors for account (accountIdentifier) & check if there's another account with the same accountIdentifier when changing it
-	 * @todo TYPO3
+	 * @todo Security
 	 */
 	public function updateAction(\TYPO3\Flow\Security\Account $account, array $password = array()) {
 		$password = array_shift($password);
@@ -158,9 +203,9 @@ class RegisterController extends ActionController {
 	}
 
 	/**
-	 * @param \TYPO3\Flow\TYPO3\Account $account
+	 * @param \TYPO3\Flow\Security\Account $account
 	 * @return void
-	 * @todo TYPO3
+	 * @todo Security
 	 */
 	public function deleteAction(\TYPO3\Flow\Security\Account $account) {
 		if ($this->securityContext->getAccount() === $account) {
@@ -178,7 +223,10 @@ class RegisterController extends ActionController {
 	 * @return void
 	 */
 	public function backAction(){
-
+		if(isset($this->settings['Redirection']['indexBack'])) {
+			$redirection = $this->settings['Redirection']['indexBack'];
+			$this->redirect($redirection['Action'], $redirection['Controller'], $redirection['Package']);
+		}
 		$this->redirect('index', 'Login');
 	}
 

@@ -1,0 +1,36 @@
+<f:layout name="Default" />
+
+<f:section name="Title">Show register "{account.accountIdentifier}"</f:section>
+
+<f:section name="Content">
+	<div class="row">
+		<div class="span12">
+			<p class="pull-right"><f:link.action class="btn btn-success" action="edit" arguments="{account: account}"><i class="icon-pencil icon-white"></i> Edit</f:link.action></p>
+			<table class="table table-striped">
+				<tr>
+					<th>Account Name: </th>
+					<td>{account.accountIdentifier}</td>
+				</tr>
+				<tr>
+					<th>Full Name: </th>
+					<td>{account.party.name.fullname}</td>
+				</tr>
+				<tr>
+					<th>First Name: </th>
+					<td>{account.party.name.firstname}</td>
+				</tr>
+				<tr>
+					<th>Last Name: </th>
+					<td>{account.party.name.lastname}</td>
+				</tr>
+				<f:for each="{account.roles}" as="role">
+					<tr>
+					<th>Role: </th>
+					<td>{role}</td>
+				</tr>
+				</f:for>
+			</table>
+			<f:link.action class="btn" action="index">Back</f:link.action>
+		</div>
+	</div>
+</f:section>

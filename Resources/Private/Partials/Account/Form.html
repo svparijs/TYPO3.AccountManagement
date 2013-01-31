@@ -1,8 +1,17 @@
 <fieldset class="span5">
+
 	<div class="legend">
-		<legend>User</legend>
+		<legend>Account</legend>
 		<f:render partial="FlashMessages" />
 	</div>
+
+	<div class="control-group">
+		<label class="control-label" for="role">Role</label>
+		<div class="controls">
+			<f:form.select options="{availableRoles}" id="role" property="roles" />
+		</div>
+	</div>
+
 	<div class="control-group">
 		<label class="control-label">Username</label>
 		<div class="controls">
@@ -68,9 +77,3 @@
 		</div>
 	</f:if>
 </fieldset>
-<div class="span10 form-actions form-footer">
-	<div class="pull-right">
-		<f:link.action class="btn">Cancel</f:link.action>
-		<f:form.submit value="Update" class="btn btn-primary"/>
-	</div>
-</div>

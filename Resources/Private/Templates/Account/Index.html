@@ -1,5 +1,5 @@
 <f:layout name="Default" />
-
+{namespace secure=Security\Manager\ViewHelpers}
 <f:section name="Title">A list of registers</f:section>
 
 <f:section name="Content">
@@ -41,10 +41,14 @@
 											<li>
 												<f:link.action action="edit" arguments="{account: account}"><i class="icon-edit"></i> Edit</f:link.action>
 											</li>
-											<li class="divider"></li>
-											<li>
-												<f:link.action action="delete" arguments="{account: account}"><i class="icon-trash"></i> Delete</f:link.action>
-											</li>
+											<f:if condition="<secure:account propertyPath='accountidentifier'/> != {account.accountidentifier}">
+												<f:then>
+													<li class="divider"></li>
+													<li>
+														<f:link.action action="delete" arguments="{account: account}"><i class="icon-trash"></i> Delete</f:link.action>
+													</li>
+												</f:then>
+											</f:if>
 										</ul>
 									</div>
 								</td>
