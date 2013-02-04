@@ -1,0 +1,81 @@
+#
+# This build script is provided by: https://github.com/svparijs/TravisCi.Example
+# Author: Sebastiaan van Parijs
+#
+# For any issues of feedback report it at Github
+#
+# The TYPO3 project - inspiring people to share!
+#
+
+# see http://about.travis-ci.org/docs/user/languages/php/ for more hints
+language: php
+
+# list any PHP version you want to test against
+php:
+
+  # aliased to a recent 5.3.x version
+  - 5.3
+  # aliased to a recent 5.4.x version
+  - 5.4
+
+# optionally specify a list of environments, for example to test different RDBMS
+env:
+  - DB=mysql
+  # Pgsql Fails on
+  - DB=pgsql
+
+# Setting up pre-requirements
+before_script:
+  - cd ..
+  - git clone git://github.com/typo3-ci/TYPO3-Travis-Integration.git build-environment
+  - source build-environment/install-helper.sh
+  - git clone git://git.typo3.org/FLOW3/Distributions/Base.git Flow
+  # Symlink the package to the folder that its gonna go
+  # [Replace Package key here]
+  - mkdir -p Flow/Packages/Application && cd Flow/Packages/Application && ln -s ../../../TYPO3.UserManagement && cd ../../
+  # [Replace Package key here]
+  - composer install --dev
+  - if [[ "$DB" == "mysql" ]]; then mysql -u root -e 'create database flow;' && curl -Lk https://gist.github.com/raw/4276117/af19ef22064aae4875f41342845fb89de2f2b72c/Settings.Mysql.yaml > Configuration/Settings.yaml ; fi
+  - if [[ "$DB" == "postgres" ]]; then psql -U postgres -c 'create database flow;' && curl -Lk https://gist.github.com/raw/4276117/40b5254f29e23ff3dcdf36ae72738ad71f9d9048/Settings.Postgresql.yaml > Configuration/Settings.yaml ; fi
+  - mkdir Build/PhpUnit && curl -Lk https://gist.github.com/raw/4276117/950465122f99e9c1506495c50332891f2cb89f9d/FunctionalTests.xml > Build/PhpUnit/FunctionalTests.xml
+  - curl -Lk https://gist.github.com/raw/4276117/af763946bd4fc7f0a0462952d71f68288a39c610/UnitTests.xml > Build/PhpUnit/UnitTests.xml
+
+script:
+  # Install Prerequirements
+  - phpunit -c Build/BuildEssentials/PhpUnit/UnitTests.xml && phpunit -c Build/BuildEssentials/PhpUnit/FunctionalTests.xml
+  - if [[ "$DB" == "mysql" ]]; then ./flow doctrine:migrate --quiet && ./flow doctrine:migrate --version 0 --quiet ; fi
+  - echo "Framework Tested."
+  - phpunit -c Build/PhpUnit/UnitTests.xml && phpunit -c Build/PhpUnit/FunctionalTests.xml
+  # [Replace Package key here]
+  - cd ../TYPO3.UserManagement
+  # [Replace Package key here]
+  - pear channel-discover pear.typo3.org
+  - pear channel-discover pear.phpmd.org
+  - pear channel-discover pear.pdepend.org
+  - pear install --alldeps typo3/PHPCS_FLOW3_Standard
+  # @todo dependency ImageMagick breaks doesn't know which one to install.
+  #- pear install --alldeps phpmd/PHP_PMD
+  - pear install pdepend/PHP_Depend-beta
+  - pear install phpunit/phpcpd
+  - pear install phpunit/phploc
+  - phpenv rehash
+  - mkdir .reports
+  # Lint
+  #- find Classes -name '*.php' -exec php -l {} \;
+  #- if [ -d Tests ]; then find Tests -name '*.php' -exec php -l {} \; fi
+  # Mess detection
+  #- phpmd Classes xml .buildessentials/PhpMd/Flow.xml --reportfile .reports/pmd.xml &> /dev/null
+  # Duplicate code
+  - phpcpd --log-pmd .reports/pmd-cpd.xml Classes/
+  # Lines of code
+  - phploc --log-csv .reports/phploc.csv Classes
+  # PHP Depend
+  - pdepend --jdepend-xml=.reports/jdepend.xml --jdepend-chart=.reports/dependencies.svg --overview-pyramid=.reports/pyramid.svg Classes
+  # Code sniffer
+  - phpcs --standard=FLOW3 --extensions=php --report-checkstyle --report-file=.reports/checkstyle.xml Classes
+  # Doesn't seem to end build..
+  #- if [ -d Tests ]; then phpcs --standard=FLOW3 --extensions=php  Tests fi
+
+# configure notifications (email, IRC, campfire etc)
+notifications:
+  irc: "irc.freenode.org##bkwi-webteam"

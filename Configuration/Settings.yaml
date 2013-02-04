@@ -9,9 +9,9 @@ TYPO3:
             entryPoint: 'WebRedirect'
             entryPointOptions:
               routeValues:
-                '@package': 'TYPO3.UserManagement'
-                '@controller': 'Login'
-                '@action': 'index'
+              '@package': 'TYPO3.UserManagement'
+              '@controller': 'Login'
+              '@action': 'index'
 
 TYPO3:
   UserManagement:

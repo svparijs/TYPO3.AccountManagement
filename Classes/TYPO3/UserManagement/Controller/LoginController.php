@@ -21,10 +21,23 @@ use TYPO3\Flow\Annotations as Flow;
 class LoginController extends \TYPO3\Flow\Security\Authentication\Controller\AbstractAuthenticationController {
 
 	/**
+	 * @var array
+	 */
+	protected $viewFormatToObjectNameMap = array(
+		'html' => 'TYPO3\Fluid\View\TemplateView',
+		'json' => 'TYPO3\Flow\Mvc\View\JsonView');
+
+	/**
 	 * @Flow\Inject
 	 * @var \TYPO3\Flow\Security\Authorization\AccessDecisionManagerInterface
 	 */
 	protected $accessDecisionManager;
+
+	/**
+	 * @var \TYPO3\Flow\Security\Authentication\AuthenticationManagerInterface
+	 * @Flow\Inject
+	 */
+	protected $authenticationManager;
 
 	/**
 	 * Index action
@@ -33,6 +46,13 @@ class LoginController extends \TYPO3\Flow\Security\Authentication\Controller\Abs
 	 * @return void
 	 */
 	public function indexAction($username = NULL) {
+		/*if ($this->authenticationManager->isAuthenticated()) {
+			if(isset($this->settings['Redirection']['signedIn'])) {
+				$redirection = $this->settings['Redirection']['signedIn'];
+				$this->redirect($redirection['actionName'], $redirection['controllerName'], $redirection['packageKey']);
+			}
+			$this->redirect('signedIn');
+		}*/
 		$this->view->assign('username', $username);
 		$this->view->assign('hostname', $this->request->getHttpRequest()->getBaseUri()->getHost());
 		$this->view->assign('date', new \DateTime());
@@ -43,7 +63,6 @@ class LoginController extends \TYPO3\Flow\Security\Authentication\Controller\Abs
 	 * @return void
 	 */
 	public function signedInAction(){
-
 	}
 
 	/**
@@ -56,17 +75,6 @@ class LoginController extends \TYPO3\Flow\Security\Authentication\Controller\Abs
 	}
 
 	/**
-	 * Is called if authentication failed.
-	 *
-	 * @param \TYPO3\Flow\Security\Exception\AuthenticationRequiredException $exception The exception thrown while the authentication process
-	 * @return void
-	 */
-	protected function onAuthenticationFailure(\TYPO3\Flow\Security\Exception\AuthenticationRequiredException $exception = NULL) {
-		$this->flashMessageContainer->addMessage(new \TYPO3\Flow\Error\Error('The entered username or password was wrong.', ($exception === NULL ? 1347016771 : $exception->getCode())));
-		$this->redirect('index');
-	}
-
-	/**
 	 * Is called if authentication was successful.
 	 *
 	 * @param \TYPO3\Flow\Mvc\ActionRequest $originalRequest The request that was intercepted by the security framework, NULL if there was none
@@ -74,14 +82,25 @@ class LoginController extends \TYPO3\Flow\Security\Authentication\Controller\Abs
 	 */
 	public function onAuthenticationSuccess(\TYPO3\Flow\Mvc\ActionRequest $originalRequest = NULL) {
 		if ($originalRequest !== NULL) {
-			$this->redirectToRequest($originalRequest);
+				// @todo fix me!
+			//$this->redirectToRequest($originalRequest);
 		}
 
+		$uriBuilder = $this->controllerContext->getUriBuilder();
 		if(isset($this->settings['Redirection']['signedIn'])) {
-			$redirection = $this->settings['Redirection']['signedIn'];
-			$this->redirect($redirection['Action'], $redirection['Controller'], $redirection['Package']);
+			$packageKey     = $this->settings['Redirection']['signedIn']['packageKey'];
+			$controllerName = $this->settings['Redirection']['signedIn']['controllerName'];
+			$actionName     = $this->settings['Redirection']['signedIn']['actionName'];
+			$uri = $uriBuilder->uriFor($actionName, NULL, $controllerName, $packageKey);
+		} else {
+			$uri = $uriBuilder->uriFor('signIn', NULL, 'Login', 'TYPO3.UserManagement');
 		}
-		$this->redirect('signedIn');
+
+		$response = array();
+		$response['status'] = 'OK';
+		$response['redirect'] = $uri;
+
+		$this->view->assign('value', $response);
 	}
 
 	/**
@@ -94,9 +113,60 @@ class LoginController extends \TYPO3\Flow\Security\Authentication\Controller\Abs
 
 		switch ($this->request->getFormat()) {
 			default :
-				$this->flashMessageContainer->addMessage(new \TYPO3\Flow\Error\Notice('Successfully logged out.', 1318421560));
+				$this->flashMessageContainer->addMessage(new \TYPO3\Flow\Error\Message('Successfully logged out.', 1318421560));
 				$this->redirect('index');
-				break;
+			break;
+		}
+	}
+
+	/**
+	 * Collects the errors and serves them
+	 *
+	 * @return void
+	 */
+	protected function errorAction() {
+			// Create response array
+		$response = array();
+		$response['status'] = 'FAILED';
+		$response['errors'] = $this->flashMessageContainer->getMessagesAndFlush();
+		$this->view->assign('value', $response);
+	}
+
+	/**
+	 *
+	 * @return void
+	 */
+	public function callActionMethod() {
+		if ($this->request->getFormat() === 'json') {
+				// @todo cleanup
+			parent::callActionMethod();
+
+			$content = $this->response->getContent();
+			$content = str_replace(array("\n", "\r", "\t"), '', $content);
+
+			// Added the if for debugging perpuses
+			if ($this->request->hasArgument('callback')) {
+				if ( !isset($content['response'])) {
+					$this->response->setContent(sprintf(
+						'%s(%s)',
+						$this->request->getArgument('callback'),
+						json_encode((object)array(
+							'html' => $content
+						))
+					));
+				}
+			} else {
+				if ( !isset($content['response'])) {
+					$this->response->setContent(sprintf(
+						'(%s)',
+						json_encode((object)array(
+							'html' => $content
+						))
+					));
+				}
+			}
+		} else {
+			parent::callActionMethod();
 		}
 	}
 

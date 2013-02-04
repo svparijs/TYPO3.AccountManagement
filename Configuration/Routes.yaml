@@ -9,19 +9,18 @@
     '@controller': 'Login'
     '@action':     'index'
     '@format':     'html'
-  appendExceedingArguments: true
 
 -
   name: 'all other security controller actions'
-  uriPattern: 'security/{@controller}/{@action}(.{@format})'
+  uriPattern: 'accounts(/{@controller}/{@action}.{@format})'
   defaults:
     '@package':    'TYPO3.UserManagement'
+    '@action':     'index'
     '@format':     'html'
-  appendExceedingArguments: true
 
 -
   name: 'Account action'
-  uriPattern: 'account/{@action}/{account}.{@format}'
+  uriPattern: 'account/{account}/{@action}.{@format}'
   defaults:
     '@package':    'TYPO3.UserManagement'
     '@controller': 'Account'
@@ -31,4 +30,3 @@
     account:
       objectType:  \TYPO3\Flow\Security\Account
       uriPattern:  '{accountIdentifier}'
-  appendExceedingArguments: true
