@@ -25,29 +25,48 @@ Through Settings.yaml you will be able to configure options like redirects to a 
 and so on. The package and its features will grow overtime if there is enough usage and are generic use cases to be applied. Feel
 free to contribute, fork or leave a note.
 
-Account Registration
---------------------
+Quickstart
+----------
 
-When the registration features is enable in the Settings.yaml, the link to the registration form is enabled.
+This section will get you up and running.
 
-(The actions are redirected through AOP, if not enabled).
+#####Routing
 
-	TYPO3:
-		UserManagement:
-			register: TRUE
+To be able to address the login feature you will need to add these routes in the general Configuration/Routes.yaml
+
+	-
+	  name: 'Security'
+	  uriPattern: '<SecuritySubroutes>'
+	  subRoutes:
+	    SecuritySubroutes:
+	      package: TYPO3.UserManagement
 
 ####Create Account
 
 There are 2 ways to create a user with this package, through the CLI and through the frontend.
 
-Usage through CLI:
+#####Usage through CLI:
 
 	./flow help user:create
-	./flow user:create --username testuser1 --password newPassword --first-name John --last-name Doe --roles Administrator
+	./flow user:create --username user1 --password newPassword --first-name John --last-name Doe --roles Administrator
 
-Usage through the frontend:
+#####Usage through the frontend:
 
-	http://localhost/login/index
+[Not working yet]
+The package will notice that there are no accounts yet, and will redirect you to a registration page where you can create your first account.
+
+	http://localhost/login
+
+[Not working yet]
+
+####First authentication
+
+Now you will be able to login. Use the credentials you filled in at this url (if your not already there).
+
+	http://localhost/login
+
+After signing in you will be redirected to the "Signed In Dummy" page, this page is to show that all the functionality works as intended.
+Later on in this README you will see how to redirect to a page of your choice.
 
 ####List Account
 
@@ -97,19 +116,6 @@ When the action is unauthorized the TYPO3.Flow framework will redirect the packa
 
 Securing your package
 ---------------------
-
-#####Routing
-
-To be able to address the login feature you will need to add these routes in the general Routes.yaml
-
-	-
-	  name: 'Security'
-	  uriPattern: '<SecuritySubroutes>'
-	  subRoutes:
-	    SecuritySubroutes:
-	      package: TYPO3.UserManagement
-
-######Securing your package
 
 To secure your package from unauthorized access you will need to add some policies in your Configuration/Policy.yaml.
 
