@@ -37,7 +37,7 @@ class AccountViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$token->setAccount($this->account);
 		$token->setAuthenticationStatus(\TYPO3\Flow\Security\Authentication\TokenInterface::AUTHENTICATION_SUCCESSFUL);
 
-		$mockSecurityContext = $this->getAccessibleMock('\TYPO3\Flow\TYPO3\Context');
+		$mockSecurityContext = $this->getAccessibleMock('\TYPO3\Flow\Security\Context');
 		$mockSecurityContext->expects($this->any())->method('getAuthenticationTokens')->will($this->returnValue(array($token)));
 
 		$viewHelper = new \TYPO3\UserManagement\ViewHelpers\AccountViewHelper();
