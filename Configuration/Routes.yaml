@@ -12,9 +12,10 @@
 
 -
   name: 'all other security controller actions'
-  uriPattern: 'accounts(/{@controller}/{@action}.{@format})'
+  uriPattern: 'accounts(/{@action}.{@format})'
   defaults:
     '@package':    'TYPO3.UserManagement'
+    '@controller': 'Account'
     '@action':     'index'
     '@format':     'html'
 

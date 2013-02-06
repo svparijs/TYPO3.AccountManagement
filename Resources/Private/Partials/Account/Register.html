@@ -2,6 +2,13 @@
 	<legend>Account</legend>
 
 	<div class="control-group">
+		<label class="control-label" for="role">Role</label>
+		<div class="controls">
+			<f:form.select options="{roles}" id="roles" name="roles" />
+		</div>
+	</div>
+
+	<div class="control-group">
 		<label class="control-label" for="identifier">Username</label>
 		<div class="controls">
 			<f:form.textfield name="identifier" id="identifier" placeholder="Enter a username..."/>
@@ -47,10 +54,3 @@
 		</div>
 	</div>
 </fieldset>
-
-<div class="span10 form-actions form-footer">
-	<div class="pull-right">
-		<f:link.action class="btn" action="index">Cancel</f:link.action>
-		<button class="btn btn-primary"> Register Account </button>
-	</div>
-</div>

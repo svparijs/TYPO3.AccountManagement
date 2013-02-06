@@ -8,14 +8,14 @@
 	<div class="control-group">
 		<label class="control-label" for="role">Role</label>
 		<div class="controls">
-			<f:form.select options="{availableRoles}" id="role" property="roles" />
+			<f:form.select options="{roles}" id="role" property="roles" />
 		</div>
 	</div>
 
 	<div class="control-group">
 		<label class="control-label">Username</label>
 		<div class="controls">
-			<span class="span3 uneditable-input">{account.accountIdentifier}</span>
+			<f:form.textfield name="identifier" id="identifier" class="span3" placeholder="Enter a username..."/>
 		</div>
 	</div>
 

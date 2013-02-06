@@ -46,13 +46,13 @@ class LoginController extends \TYPO3\Flow\Security\Authentication\Controller\Abs
 	 * @return void
 	 */
 	public function indexAction($username = NULL) {
-		/*if ($this->authenticationManager->isAuthenticated()) {
-			if(isset($this->settings['Redirection']['signedIn'])) {
-				$redirection = $this->settings['Redirection']['signedIn'];
-				$this->redirect($redirection['actionName'], $redirection['controllerName'], $redirection['packageKey']);
+		if ($this->authenticationManager->isAuthenticated()) {
+			if(isset($this->settings['Redirect']['signedIn'])) {
+				$redirect = $this->settings['Redirect']['signedIn'];
+				$this->redirect($redirect['actionName'], $redirect['controllerName'], $redirect['packageKey']);
 			}
 			$this->redirect('signedIn');
-		}*/
+		}
 		$this->view->assign('username', $username);
 		$this->view->assign('hostname', $this->request->getHttpRequest()->getBaseUri()->getHost());
 		$this->view->assign('date', new \DateTime());
@@ -81,19 +81,18 @@ class LoginController extends \TYPO3\Flow\Security\Authentication\Controller\Abs
 	 * @return string
 	 */
 	public function onAuthenticationSuccess(\TYPO3\Flow\Mvc\ActionRequest $originalRequest = NULL) {
-		if ($originalRequest !== NULL) {
-				// @todo fix me!
-			//$this->redirectToRequest($originalRequest);
-		}
-
 		$uriBuilder = $this->controllerContext->getUriBuilder();
-		if(isset($this->settings['Redirection']['signedIn'])) {
-			$packageKey     = $this->settings['Redirection']['signedIn']['packageKey'];
-			$controllerName = $this->settings['Redirection']['signedIn']['controllerName'];
-			$actionName     = $this->settings['Redirection']['signedIn']['actionName'];
-			$uri = $uriBuilder->uriFor($actionName, NULL, $controllerName, $packageKey);
+		if ($originalRequest !== NULL) {
+			$uriBuilder->uriFor($originalRequest->getControllerActionName(), NULL, $originalRequest->getControllerName(), $originalRequest->getControllerPackageKey());
 		} else {
-			$uri = $uriBuilder->uriFor('signIn', NULL, 'Login', 'TYPO3.UserManagement');
+			if(isset($this->settings['Redirect']['signedIn'])) {
+				$packageKey     = $this->settings['Redirect']['signedIn']['packageKey'];
+				$controllerName = $this->settings['Redirect']['signedIn']['controllerName'];
+				$actionName     = $this->settings['Redirect']['signedIn']['actionName'];
+				$uri = $uriBuilder->uriFor($actionName, NULL, $controllerName, $packageKey);
+			} else {
+				$uri = $uriBuilder->uriFor('signIn', NULL, 'Login', 'TYPO3.UserManagement');
+			}
 		}
 
 		$response = array();
@@ -144,7 +143,7 @@ class LoginController extends \TYPO3\Flow\Security\Authentication\Controller\Abs
 			$content = $this->response->getContent();
 			$content = str_replace(array("\n", "\r", "\t"), '', $content);
 
-			// Added the if for debugging perpuses
+			// Added the if for debugging
 			if ($this->request->hasArgument('callback')) {
 				if ( !isset($content['response'])) {
 					$this->response->setContent(sprintf(

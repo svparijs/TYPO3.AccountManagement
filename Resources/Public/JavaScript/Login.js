@@ -1,7 +1,7 @@
 $(document).ready(function() {
 	// Make sure clicks stays in the modal
 	$('#loginpanel form').on('submit', function(el) {
-		$('.modal-body').append('<p><i class="icon-spin icon-refresh icon-4x muted"></i></p>');
+		$('.modal-body').append('<p align="center"><i class="icon-spin icon-spinner icon-4x muted"></i></p>');
 		$('.alert').remove();
 		$('.login').hide();
 		var form = $(this);

@@ -108,30 +108,10 @@ class AccountController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	/**
 	 * Shows a form for creating a new account object
 	 *
-	 * @param \TYPO3\Flow\Security\Account $account
 	 * @return void
 	 */
-	public function registerAction(\TYPO3\Flow\Security\Account $account = NULL) {
-		$this->view->assign('account', $account);
-		$this->view->assign('availableRoles', $this->policyService->getRoles());
-	}
-
-	/**
-	 * Show the registration successfull page and redirects to the login page
-	 * @return void
-	 */
-	public function onRegistrationSucces(){
-		$this->redirect('index', 'Login', NULL, array(), 400);
-	}
-
-	/**
-	 * Shows a form for creating a new account object
-	 *
-	 * @param \TYPO3\Flow\Security\Account $account
-	 * @return void
-	 */
-	public function newAction(\TYPO3\Flow\Security\Account $account = NULL) {
-		$this->view->assign('account', $account);
+	public function newAction() {
+		$this->view->assign('roles', $this->policyService->getRoles());
 	}
 
 	/**
@@ -142,7 +122,7 @@ class AccountController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 * @Flow\Validate(argumentName="identifier", type="StringLength", options={ "minimum"=1, "maximum"=255 })
 	 * @Flow\Validate(argumentName="identifier", type="\TYPO3\UserManagement\Validation\Validator\AccountExistsValidator")
 	 * @param array $password
-	 * @Flow\Validate(argumentName="password", type="\TYPO3\UserManagement\Validation\Validator\PasswordValidator", options={ "allowEmpty"=0, "minimum"=1, "maximum"=255 })
+	 * @Flow\Validate(argumentName="password", type="\TYPO3\UserManagement\Validation\Validator\PasswordValidator")
 	 * @param string $email
 	 * @Flow\Validate(argumentName="email", type="NotEmpty")
 	 * @Flow\Validate(argumentName="email", type="\TYPO3\Flow\Validation\Validator\EmailAddressValidator")
@@ -152,16 +132,20 @@ class AccountController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 * @param string $lastName
 	 * @Flow\Validate(argumentName="lastName", type="NotEmpty")
 	 * @Flow\Validate(argumentName="lastName", type="StringLength", options={ "minimum"=1, "maximum"=255 })
+	 * @param string $roles
 	 * @return void
-	 * @todo Security
 	 */
-	public function createAction($identifier, array $password, $email, $firstName, $lastName, $role) {
-		$user = new \Security\Manager\Domain\Model\User();
+	public function createAction($identifier, array $password, $email, $firstName, $lastName, $roles) {
+		$user = new \TYPO3\UserManagement\Domain\Model\User();
 		$name = new \TYPO3\Party\Domain\Model\PersonName('', $firstName, '', $lastName, '', $identifier);
 		$user->setName($name);
+		$electrinocAddress = new \TYPO3\Party\Domain\Model\ElectronicAddress();
+		$electrinocAddress->setIdentifier($email);
+		$electrinocAddress->setType('Email');
+		$user->setPrimaryElectronicAddress($electrinocAddress);
 		$this->partyRepository->add($user);
 
-		$account = $this->accountFactory->createAccountWithPassword($identifier, array_shift($password), array('Administrator'), 'DefaultProvider');
+		$account = $this->accountFactory->createAccountWithPassword($identifier, array_shift($password), array($roles), 'DefaultProvider');
 		$account->setParty($user);
 		$this->accountRepository->add($account);
 
@@ -177,6 +161,7 @@ class AccountController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 */
 	public function editAction(\TYPO3\Flow\Security\Account $account) {
 		$this->view->assign('account', $account);
+		$this->view->assign('roles', $this->policyService->getRoles());
 	}
 
 	/**
@@ -187,7 +172,6 @@ class AccountController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 * @Flow\Validate(argumentName="password", type="\TYPO3\UserManagement\Validation\Validator\PasswordValidator", options={ "allowEmpty"=1, "minimum"=1, "maximum"=255 })
 	 * @return void
 	 * @todo Handle validation errors for account (accountIdentifier) & check if there's another account with the same accountIdentifier when changing it
-	 * @todo Security
 	 */
 	public function updateAction(\TYPO3\Flow\Security\Account $account, array $password = array()) {
 		$password = array_shift($password);
@@ -205,7 +189,6 @@ class AccountController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	/**
 	 * @param \TYPO3\Flow\Security\Account $account
 	 * @return void
-	 * @todo Security
 	 */
 	public function deleteAction(\TYPO3\Flow\Security\Account $account) {
 		if ($this->securityContext->getAccount() === $account) {
@@ -223,11 +206,11 @@ class AccountController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 * @return void
 	 */
 	public function backAction(){
-		if(isset($this->settings['Redirection']['indexBack'])) {
-			$redirection = $this->settings['Redirection']['indexBack'];
-			$this->redirect($redirection['Action'], $redirection['Controller'], $redirection['Package']);
+		if(isset($this->settings['Redirect']['backToLink'])) {
+			$redirect = $this->settings['Redirect']['backToLink'];
+			$this->redirect($redirect['actionName'], $redirect['controllerName'], $redirect['packageKey']);
 		}
-		$this->redirect('index', 'Login');
+		$this->redirect('signedIn', 'Login');
 	}
 
 }

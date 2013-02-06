@@ -29,6 +29,19 @@
 					<td>{role}</td>
 				</tr>
 				</f:for>
+				<f:if condition="{account.party.electronicAddresses}">
+
+					<f:for each="{account.party.electronicAddresses}" as="electronicAddress">
+						<tr>
+							<th>
+								{electronicAddress.type}:
+							</th>
+							<td>
+								{electronicAddress.identifier}
+							</td>
+						</tr>
+					</f:for>
+				</f:if>
 			</table>
 			<f:link.action class="btn" action="index">Back</f:link.action>
 		</div>

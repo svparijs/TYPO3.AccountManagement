@@ -1,19 +1,14 @@
-<f:layout name="Default" />
-
-<f:section name="Title">Edit account: {account.accountIdentifier}</f:section>
+<f:layout name="AjaxCall" />
 
 <f:section name="Content">
-	<div class="list-alignment"></div>
-	<div class="row well">
-		<f:form action="update" object="{account}" name="account">
-			<f:render partial="Account/Form" arguments="{_all}" />
+	<f:form action="update" object="{account}" name="account" class="form-horizontal">
+		<f:render partial="Account/Form" arguments="{_all}" />
 
-			<div class="span10 form-actions form-footer">
-				<div class="pull-right">
-					<f:link.action class="btn" action="index">Cancel</f:link.action>
-					<button class="btn btn-primary"> Update </button>
-				</div>
+		<div class="span10 form-actions form-footer">
+			<div class="pull-right">
+				<f:link.action class="btn" action="index">Cancel</f:link.action>
+				<button class="btn btn-primary"> Update </button>
 			</div>
-		</f:form>
-	</div>
+		</div>
+	</f:form>
 </f:section>
