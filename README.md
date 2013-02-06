@@ -72,6 +72,15 @@ Later on in this README you will see how to redirect to a page of your choice.
 
 ####Edit Account
 
+Login Panel
+-----------
+
+Add the following lines of code to your application to
+
+	<script src="resource://Beech.Ehrm/Public/JavaScript/Login.js"></script>
+
+	<a class="login" href="{f:uri.action(controller:'Login', action: 'loginPanel', package: 'TYPO3.UserManagement')}">Login</a>
+
 Account ViewHelper
 ------------------
 

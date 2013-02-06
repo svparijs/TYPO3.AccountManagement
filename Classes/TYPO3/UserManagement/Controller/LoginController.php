@@ -24,8 +24,9 @@ class LoginController extends \TYPO3\Flow\Security\Authentication\Controller\Abs
 	 * @var array
 	 */
 	protected $viewFormatToObjectNameMap = array(
-		'html' => 'TYPO3\Fluid\View\TemplateView',
-		'json' => 'TYPO3\Flow\Mvc\View\JsonView');
+		'html'  => 'TYPO3\Fluid\View\TemplateView',
+		'json'  => 'TYPO3\Flow\Mvc\View\JsonView',
+		'jsonp' => 'TYPO3\UserManagement\View\TemplateView');
 
 	/**
 	 * @Flow\Inject
@@ -53,6 +54,18 @@ class LoginController extends \TYPO3\Flow\Security\Authentication\Controller\Abs
 			}
 			$this->redirect('signedIn');
 		}
+		$this->view->assign('username', $username);
+		$this->view->assign('hostname', $this->request->getHttpRequest()->getBaseUri()->getHost());
+		$this->view->assign('date', new \DateTime());
+	}
+
+	/**
+	 * Loginpanel action
+	 *
+	 * @param string $username
+	 * @return void
+	 */
+	public function loginPanelAction($username = NULL) {
 		$this->view->assign('username', $username);
 		$this->view->assign('hostname', $this->request->getHttpRequest()->getBaseUri()->getHost());
 		$this->view->assign('date', new \DateTime());
@@ -136,7 +149,7 @@ class LoginController extends \TYPO3\Flow\Security\Authentication\Controller\Abs
 	 * @return void
 	 */
 	public function callActionMethod() {
-		if ($this->request->getFormat() === 'json') {
+		if ($this->request->getFormat() === 'jsonp') {
 				// @todo cleanup
 			parent::callActionMethod();
 
