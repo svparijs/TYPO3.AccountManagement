@@ -9,7 +9,7 @@
 				<source>Dummy Authenticated View</source>
 			</trans-unit>
 			<trans-unit id="authorized.header" xml:space="preserve">
-				<source>A dummy authenticated page</source>
+				<source>A authenticated page</source>
 			</trans-unit>
 			<trans-unit id="authorized.description" xml:space="preserve">
 				<source>Your are authenticated with user:</source>
@@ -44,13 +44,13 @@
 			<trans-unit id="account.index" xml:space="preserve">
 				<source>Manage Accounts</source>
 			</trans-unit>
-			<trans-unit id="update" xml:space="preserve">
-				<source>Update</source>
+			<trans-unit id="action.save" xml:space="preserve">
+				<source>Save</source>
 			</trans-unit>
-			<trans-unit id="submit" xml:space="preserve">
+			<trans-unit id="action.submit" xml:space="preserve">
 				<source>Submit</source>
 			</trans-unit>
-			<trans-unit id="cancel" xml:space="preserve">
+			<trans-unit id="action.cancel" xml:space="preserve">
 				<source>Cancel</source>
 			</trans-unit>
 		</body>

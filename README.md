@@ -75,11 +75,20 @@ Later on in this README you will see how to redirect to a page of your choice.
 Login Panel
 -----------
 
-Add the following lines of code to your application to
+Add the following lines of code to your application to get the Login Panel, (pre-requirements are you have jQuery, Bootstrap and jQuery.form loaded).
+
+The javascript that will handle your Action calls.
 
 	<script src="resource://Beech.Ehrm/Public/JavaScript/Login.js"></script>
 
-	<a class="login" href="{f:uri.action(controller:'Login', action: 'loginPanel', package: 'TYPO3.UserManagement')}">Login</a>
+The link that will trigger the login panel:
+
+	<a class="login-panel" data-toggle="modal" data-target="#modal-login" href="{f:uri.action(controller:'Login', action: 'loginPanel', package: 'TYPO3.UserManagement')}">Login Action</a>
+
+The modal that will be displayed:
+
+	<div class="modal hide fade" id="modal-login">
+    </div>
 
 Account ViewHelper
 ------------------

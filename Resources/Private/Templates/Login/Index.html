@@ -3,12 +3,12 @@
 <f:section name="Title">Account - Login</f:section>
 
 <f:section name="Content">
-	<div class="modal">
+	<div id="modal-login" class="modal">
 		<div class="modal-header">
 			<h3><f:translate id="authentication.header">Login</f:translate></h3>
 		</div>
 		<div class="modal-body">
-			<f:form id="loginpanel" name="login" class="login form form-horizontal" action="authenticate" format="json" additionalAttributes="{data-target:'#modal-body-only'}">
+			<f:form id="login-form" name="login" class="form-horizontal" action="authenticate" format="json">
 				<fieldset>
 					<f:render partial="FlashMessages" />
 

@@ -23,10 +23,21 @@ class LoginController extends \TYPO3\Flow\Security\Authentication\Controller\Abs
 	/**
 	 * @var array
 	 */
+	protected $supportedMediaTypes = array('text/html', 'application/json', 'application/jsonp');
+
+	/**
+	 * @var array
+	 */
 	protected $viewFormatToObjectNameMap = array(
 		'html'  => 'TYPO3\Fluid\View\TemplateView',
 		'json'  => 'TYPO3\Flow\Mvc\View\JsonView',
 		'jsonp' => 'TYPO3\UserManagement\View\TemplateView');
+
+	/**
+	 * @var \TYPO3\Flow\I18n\Translator
+	 * @Flow\Inject
+	 */
+	protected $translator;
 
 	/**
 	 * @Flow\Inject
@@ -75,8 +86,7 @@ class LoginController extends \TYPO3\Flow\Security\Authentication\Controller\Abs
 	 *
 	 * @return void
 	 */
-	public function signedInAction(){
-	}
+	public function signedInAction(){}
 
 	/**
 	 * Redirect action
@@ -132,6 +142,25 @@ class LoginController extends \TYPO3\Flow\Security\Authentication\Controller\Abs
 	}
 
 	/**
+	 * A template method for displaying custom error flash messages, or to
+	 * display no flash message at all on errors. Override this to customize
+	 * the flash message in your action controller.
+	 *
+	 * This method is used to overwrite default error messages template TYPO3.Flow package
+	 *
+	 * @return \TYPO3\Flow\Error\Error The flash message
+	 */
+	protected function getErrorFlashMessage() {
+		/*return new \TYPO3\Flow\Error\Message(
+			$this->translator->translateById('message.authentication.failed.wrongCredentials', array(), NULL, NULL, 'Main', 'Beech.Ehrm'),
+			NULL,
+			array(),
+			$this->translator->translateById('message.authentication.failed', array(), NULL, NULL, 'Main', 'Beech.Ehrm')
+		);
+		*/
+	}
+
+	/**
 	 * Collects the errors and serves them
 	 *
 	 * @return void
@@ -150,9 +179,11 @@ class LoginController extends \TYPO3\Flow\Security\Authentication\Controller\Abs
 	 */
 	public function callActionMethod() {
 		if ($this->request->getFormat() === 'jsonp') {
-				// @todo cleanup
-			parent::callActionMethod();
-
+			try {
+				parent::callActionMethod();
+			} catch (\Exception $exception) {
+				$this->response->setContent(sprintf('<div class="alert alert-error"><button class="close" data-dismiss="alert" type="button">×</button>%s</div><strong>Error!</strong> ', $exception->getMessage()));
+			}
 			$content = $this->response->getContent();
 			$content = str_replace(array("\n", "\r", "\t"), '', $content);
 
