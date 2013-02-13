@@ -2,15 +2,6 @@
 # Default routes configuration for the Security.Manager package          #
 #                                                                        #
 -
-  name: 'Authentication'
-  uriPattern: 'login(/{@action}.{@format})'
-  defaults:
-    '@package':    'TYPO3.UserManagement'
-    '@controller': 'Login'
-    '@action':     'index'
-    '@format':     'html'
-
--
   name: 'all other security controller actions'
   uriPattern: 'accounts(/{@action}.{@format})'
   defaults:
