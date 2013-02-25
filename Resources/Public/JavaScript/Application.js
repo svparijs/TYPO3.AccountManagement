@@ -56,6 +56,9 @@ $(document).ready(function() {
 			url: $url,
 			context: this,
 			dataType: 'html',
+			error: function(data){
+				$('.modal-body').prepend('<div class="alert alert-error"><a class="close" href="#" data-dismiss="alert">×</a><h4 class="alert-heading">Oh snap! Your server took a nose dive!</h4>Internal Server error</div>');
+			},
 			success: function(response) {
 				var $modal = $('#modal');
 				$modal.html(response).find('form').ajaxForm({
