@@ -12,6 +12,9 @@ namespace TYPO3\UserManagement\Command;
  *                                                                        */
 
 use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Flow\Security\Exception\NoSuchRoleException;
+use TYPO3\Flow\Security\Exception\RoleExistsException;
+use TYPO3\Flow\Security\Policy\Role;
 
 /**
  * Command controller for tasks related to account handling
@@ -34,9 +37,9 @@ class AccountCommandController extends \TYPO3\Flow\Cli\CommandController {
 
 	/**
 	 * @Flow\Inject
-	 * @var \TYPO3\Flow\Reflection\ReflectionService
+	 * @var \TYPO3\Flow\Security\Policy\PolicyService
 	 */
-	protected $reflectionService;
+	protected $policyService;
 
 	/**
 	 * Lists the Accounts of this installation
@@ -81,17 +84,12 @@ class AccountCommandController extends \TYPO3\Flow\Cli\CommandController {
 	 * Shows particular data for a given Account
 	 *
 	 * @param string $identifier The account identifier to show information about
-	 * @param string $authenticationProviderName The authentication provider name
+	 * @param string $authenticationProvider The name of the authentication provider. Can be left out if account identifier is unambiguous
 	 * @return void
 	 * @see typo3.usermanagement:account:list
 	 */
-	public function showCommand($identifier, $authenticationProviderName = 'DefaultProvider') {
-		/** @var $account \TYPO3\Flow\Security\Account */
-		$account = $this->accountRepository->findByAccountIdentifierAndAuthenticationProviderName($identifier, $authenticationProviderName);
-		if ($account === NULL) {
-			$this->outputLine('No Account could be found for the given identifier and authentication provider name.');
-			return;
-		}
+	public function showCommand($identifier, $authenticationProvider = NULL) {
+		$account = $this->getAccountByIdentifierOrAuthenticationProviderName($identifier, $authenticationProvider);
 
 		$this->outputLine('Identifier:              %s', array($account->getAccountIdentifier()));
 		$this->outputLine('Authentication Provider: %s', array($account->getAuthenticationProviderName()));
@@ -115,13 +113,102 @@ class AccountCommandController extends \TYPO3\Flow\Cli\CommandController {
 		if (count($account->getRoles()) === 0) {
 			$this->outputFormatted('none set', array(), 4);
 		} else {
-			/** @var $role \TYPO3\Flow\Security\Policy\Role */
+			/** @var $role Role */
 			foreach ($account->getRoles() as $roleIdentifier => $role) {
 				$parentRoles = $role->getParentRoles();
 				$parentRolesString = $parentRoles ? implode($parentRoles, ', ') : 'none';
 				$this->outputFormatted('%s (parents: %s)', array($roleIdentifier, $parentRolesString), 4);
 			}
 		}
+	}
+
+	/**
+	 * @param string $identifier The account identifier to add the role to
+	 * @param string $role The name of the role to add
+	 * @param string $authenticationProvider The name of the authentication provider. Can be left out if account identifier is unambiguous
+	 * @return void
+	 * @see typo3.usermanagement:account:show
+	 * @see typo3.usermanagement:account:removeRole
+	 */
+	public function addRoleCommand($identifier, $role, $authenticationProvider = NULL) {
+		$account = $this->getAccountByIdentifierOrAuthenticationProviderName($identifier, $authenticationProvider);
+		try {
+			$role = $this->policyService->getRole($role);
+		} catch (NoSuchRoleException $exception) {
+			try {
+				$role = $this->policyService->createRole($role);
+			} catch (RoleExistsException $exception) {
+				$this->outputLine('Error: %s', array($exception->getMessage()));
+				$this->quit(1);
+			} catch (\InvalidArgumentException $exception) {
+				$this->outputLine('Error: %s', array($exception->getMessage()));
+				$this->quit(1);
+			}
+		}
+
+		if ($account->hasRole($role)) {
+			$this->outputLine('Error: Account already has the role assigned.');
+			$this->quit(1);
+		} else {
+			$account->addRole($role);
+			$this->accountRepository->update($account);
+			$this->outputLine('Role has been added to the Account.');
+		}
+	}
+
+	/**
+	 * @param string $identifier The account identifier to remove the role from
+	 * @param string $role The name of the role to remove
+	 * @param string $authenticationProvider The name of the authentication provider. Can be left out if account identifier is unambiguous
+	 * @return void
+	 * @see typo3.usermanagement:account:show
+	 * @see typo3.usermanagement:account:addRole
+	 */
+	public function removeRoleCommand($identifier, $role, $authenticationProvider = NULL) {
+		$account = $this->getAccountByIdentifierOrAuthenticationProviderName($identifier, $authenticationProvider);
+		try {
+			$role = $this->policyService->getRole($role);
+		} catch (NoSuchRoleException $exception) {
+			$this->outputLine('Error: The given role does not exist.');
+			$this->quit(1);
+		}
+
+		if (!$account->hasRole($role)) {
+			$this->outputLine('Error: Account does not have the role assigned.');
+			$this->quit(1);
+		} else {
+			$account->removeRole($role);
+			$this->accountRepository->update($account);
+			$this->outputLine('Role has been removed from the Account.');
+		}
+	}
+
+	/**
+	 * Tries to find an account by its identifier only
+	 * If this is ambiguous due to multiple authentication provider names, or if no Account could be found at all, the CLI execution is halted.
+	 *
+	 * @param string $identifier
+	 * @param string $authenticationProvider
+	 * @return \TYPO3\Flow\Security\Account
+	 */
+	protected function getAccountByIdentifierOrAuthenticationProviderName($identifier, $authenticationProvider = NULL) {
+		if ($authenticationProvider !== NULL) {
+			$account = $this->accountRepository->findByAccountIdentifierAndAuthenticationProviderName($identifier, $authenticationProvider);
+		} else {
+			$accounts = $this->accountRepository->findByAccountIdentifier($identifier);
+			if ($accounts->count() > 1) {
+				$this->outputFormatted('The given account identifier is ambiguous across multiple authentication providers. Please call the command again with the intended authentication provider name.');
+				$this->quit(1);
+			}
+			$account = $accounts->getFirst();
+		}
+
+		if ($account === NULL) {
+			$this->outputLine('No Account could be found.');
+			$this->quit(1);
+		}
+
+		return $account;
 	}
 
 }
