@@ -5,6 +5,9 @@
 	"require": {
 		"typo3/flow": "*"
 	},
+	"suggest":{
+		"typo3/party": "For not only working with plain Accounts but also Users, the TYPO3.Party package is suggested to be used"
+	},
 	"autoload": {
 		"psr-0": {
 			"TYPO3\\UserManagement": "Classes"
