@@ -68,7 +68,7 @@ script:
   # Mess detection
   #- phpmd Classes xml .buildessentials/PhpMd/Flow.xml --reportfile .reports/pmd.xml &> /dev/null
   # Duplicate code
-  - phpcpd --log-pmd .reports/pmd-cpd.xml Classes/
+  - phpcpd Classes/
   # Lines of code
   - phploc --log-csv .reports/phploc.csv Classes
   # PHP Depend
