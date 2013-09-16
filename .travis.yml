@@ -29,7 +29,7 @@ before_script:
   - cd ..
   - git clone git://github.com/typo3-ci/TYPO3-Travis-Integration.git build-environment
   - source build-environment/install-helper.sh
-  - git clone git://git.typo3.org/FLOW3/Distributions/Base.git Flow
+  - git clone git://git.typo3.org/Flow/Distributions/Base.git Flow
   # Symlink the package to the folder that its gonna go
   # [Replace Package key here]
   - mkdir -p Flow/Packages/Application && cd Flow/Packages/Application && ln -s ../../../TYPO3.UserManagement && cd ../../
