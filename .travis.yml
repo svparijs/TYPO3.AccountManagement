@@ -22,7 +22,7 @@ php:
 env:
   - DB=mysql
   # Pgsql Fails on
-  - DB=pgsql
+  #- DB=pgsql // No usecase yet.
 
 # Setting up pre-requirements
 before_script:
@@ -34,6 +34,8 @@ before_script:
   # [Replace Package key here]
   - mkdir -p Flow/Packages/Application && cd Flow/Packages/Application && ln -s ../../../TYPO3.UserManagement && cd ../../
   # [Replace Package key here]
+  # Get most recent composer
+  - composer self-update
   - composer install --dev
   - if [[ "$DB" == "mysql" ]]; then mysql -u root -e 'create database flow;' && curl -Lk https://gist.github.com/raw/4276117/af19ef22064aae4875f41342845fb89de2f2b72c/Settings.Mysql.yaml > Configuration/Settings.yaml ; fi
   - if [[ "$DB" == "postgres" ]]; then psql -U postgres -c 'create database flow;' && curl -Lk https://gist.github.com/raw/4276117/40b5254f29e23ff3dcdf36ae72738ad71f9d9048/Settings.Postgresql.yaml > Configuration/Settings.yaml ; fi
@@ -78,4 +80,5 @@ script:
 
 # configure notifications (email, IRC, campfire etc)
 notifications:
-  irc: "irc.freenode.org##bkwi-webteam"
+  irc: "irc.freenode.org#simplyadmire"
+  irc: "irc.freenode.org#refactory.it"
