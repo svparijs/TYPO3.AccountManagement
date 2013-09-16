@@ -73,7 +73,7 @@ class AccountManagementService {
 	public function createUser($username, $password, $firstName, $lastName, $roles, $authenticationProvider = 'DefaultProvider') {
 		$account = $this->accountRepository->findByAccountIdentifierAndAuthenticationProviderName($username, $authenticationProvider);
 		if ($account instanceof \TYPO3\Flow\Security\Account) {
-			// Return exception
+				// Return exception
 			return sprintf('User "%s" already exists.', array($username));
 		}
 
@@ -182,7 +182,7 @@ class AccountManagementService {
 	public function listCommand($identifierFilter = NULL, $limit = 100) {
 		$query = $this->accountRepository->createQuery();
 		if ($identifierFilter !== NULL) {
-			$query->matching($query->like('accountIdentifier',$identifierFilter, FALSE));
+			$query->matching($query->like('accountIdentifier', $identifierFilter, FALSE));
 		}
 		$result = $query->execute();
 
@@ -249,67 +249,6 @@ class AccountManagementService {
 		}
 	}
 
-//	/**
-//	 * @param string $identifier The account identifier to add the role to
-//	 * @param string $role The name of the role to add
-//	 * @param string $authenticationProvider The name of the authentication provider. Can be left out if account identifier is unambiguous
-//	 * @return void
-//	 * @see typo3.usermanagement:account:show
-//	 * @see typo3.usermanagement:account:removeRole
-//	 */
-//	public function addRoleCommand($identifier, $role, $authenticationProvider = NULL) {
-//		$account = $this->getAccountByIdentifierOrAuthenticationProviderName($identifier, $authenticationProvider);
-//		try {
-//			$role = $this->policyService->getRole($role);
-//		} catch (NoSuchRoleException $exception) {
-//			try {
-//				$role = $this->policyService->createRole($role);
-//			} catch (RoleExistsException $exception) {
-//				$this->outputLine('Error: %s', array($exception->getMessage()));
-//				$this->quit(1);
-//			} catch (\InvalidArgumentException $exception) {
-//				$this->outputLine('Error: %s', array($exception->getMessage()));
-//				$this->quit(1);
-//			}
-//		}
-//
-//		if ($account->hasRole($role)) {
-//			$this->outputLine('Error: Account already has the role assigned.');
-//			$this->quit(1);
-//		} else {
-//			$account->addRole($role);
-//			$this->accountRepository->update($account);
-//			$this->outputLine('Role has been added to the Account.');
-//		}
-//	}
-//
-//	/**
-//	 * @param string $identifier The account identifier to remove the role from
-//	 * @param string $role The name of the role to remove
-//	 * @param string $authenticationProvider The name of the authentication provider. Can be left out if account identifier is unambiguous
-//	 * @return void
-//	 * @see typo3.usermanagement:account:show
-//	 * @see typo3.usermanagement:account:addRole
-//	 */
-//	public function removeRoleCommand($identifier, $role, $authenticationProvider = NULL) {
-//		$account = $this->getAccountByIdentifierOrAuthenticationProviderName($identifier, $authenticationProvider);
-//		try {
-//			$role = $this->policyService->getRole($role);
-//		} catch (NoSuchRoleException $exception) {
-//			$this->outputLine('Error: The given role does not exist.');
-//			$this->quit(1);
-//		}
-//
-//		if (!$account->hasRole($role)) {
-//			$this->outputLine('Error: Account does not have the role assigned.');
-//			$this->quit(1);
-//		} else {
-//			$account->removeRole($role);
-//			$this->accountRepository->update($account);
-//			$this->outputLine('Role has been removed from the Account.');
-//		}
-//	}
-
 	/**
 	 * Tries to find an account by its identifier only
 	 * If this is ambiguous due to multiple authentication provider names, or if no Account could be found at all, the CLI execution is halted.
@@ -340,5 +279,4 @@ class AccountManagementService {
 
 }
 
-?>
 ?>
