@@ -55,19 +55,21 @@ class AccountCommandController extends \TYPO3\Flow\Cli\CommandController {
 	public function listCommand($identifierFilter = NULL, $limit = 100) {
 		$query = $this->accountRepository->createQuery();
 		if ($identifierFilter !== NULL) {
-			$query->matching($query->like('accountIdentifier',$identifierFilter, FALSE));
+			$query->matching($query->like('accountIdentifier', $identifierFilter, FALSE));
 		}
 		$result = $query->execute();
 
 		$this->outputLine('Creation date            Expiration date          Auth. prov. name     Identifier');
 		$this->outputLine('------------------------ ------------------------ -------------------- -------------');
+
 		/** @var $account \TYPO3\Flow\Security\Account */
+
 		$displayCount = 0;
 		foreach ($result as $account) {
 			$this->outputLine('%s %s %s %s', array(
 				$account->getCreationDate() ? $account->getCreationDate()->format(\DateTime::ISO8601) : 'NULL' . str_repeat(' ', 20),
 				$account->getExpirationDate() ? $account->getExpirationDate()->format(\DateTime::ISO8601) : 'NULL' . str_repeat(' ', 20),
-			 	str_pad($account->getAuthenticationProviderName(), 20, ' ', STR_PAD_RIGHT),
+				str_pad($account->getAuthenticationProviderName(), 20, ' ', STR_PAD_RIGHT),
 				$account->getAccountIdentifier()
 			));
 			$displayCount++;

@@ -205,8 +205,8 @@ class AccountController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 *
 	 * @return void
 	 */
-	public function backAction(){
-		if(isset($this->settings['Redirect']['backToLink'])) {
+	public function backAction() {
+		if (isset($this->settings['Redirect']['backToLink'])) {
 			$redirect = $this->settings['Redirect']['backToLink'];
 			$this->redirect($redirect['actionName'], $redirect['controllerName'], $redirect['packageKey']);
 		}
