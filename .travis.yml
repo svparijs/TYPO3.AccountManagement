@@ -32,7 +32,7 @@ before_script:
   - git clone git://git.typo3.org/Flow/Distributions/Base.git Flow
   # Symlink the package to the folder that its gonna go
   # [Replace Package key here]
-  - mkdir -p Flow/Packages/Application && cd Flow/Packages/Application && ln -s ../../../TYPO3.UserManagement && cd ../../
+  - mkdir -p Flow/Packages/Application && cd Flow/Packages/Application && ln -s ../../../TYPO3.AccountManagement && cd ../../
   # [Replace Package key here]
   # Get most recent composer
   - composer self-update
@@ -49,7 +49,7 @@ script:
   - echo "Framework Tested."
   - phpunit -c Build/PhpUnit/UnitTests.xml && phpunit -c Build/PhpUnit/FunctionalTests.xml
   # [Replace Package key here]
-  - cd ../TYPO3.UserManagement
+  - cd ../TYPO3.AccountManagement
   # [Replace Package key here]
   - pear channel-discover pear.typo3.org
   - pear channel-discover pear.phpmd.org
@@ -75,10 +75,8 @@ script:
   - pdepend --jdepend-xml=.reports/jdepend.xml --jdepend-chart=.reports/dependencies.svg --overview-pyramid=.reports/pyramid.svg Classes
   # Code sniffer
   - phpcs --standard=FLOW3 --extensions=php Classes
-  # Doesn't seem to end build..
-  #- if [ -d Tests ]; then phpcs --standard=FLOW3 --extensions=php  Tests fi
+  - if [ -d Tests ]; then phpcs --standard=FLOW3 --extensions=php  Tests fi
 
 # configure notifications (email, IRC, campfire etc)
 notifications:
-  irc: "irc.freenode.org#simplyadmire"
   irc: "irc.freenode.org#refactory.it"
