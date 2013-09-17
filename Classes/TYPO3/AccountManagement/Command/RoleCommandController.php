@@ -1,5 +1,5 @@
 <?php
-namespace TYPO3\UserManagement\Command;
+namespace TYPO3\AccountManagement\Command;
 
 /*                                                                        *
  * This script belongs to the TYPO3 Flow framework.                       *

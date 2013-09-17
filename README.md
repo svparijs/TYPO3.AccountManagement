@@ -47,8 +47,8 @@ There are 2 ways to create a user with this package, through the CLI and through
 
 #####Usage through CLI:
 
-	./flow help user:create
-	./flow user:create --username user1 --password newPassword --first-name John --last-name Doe --roles Administrator
+	./flow help account:create
+	./flow account:create --username user1 --password newPassword --first-name John --last-name Doe --roles Administrator
 
 #####Usage through the frontend:
 

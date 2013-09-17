@@ -5,7 +5,7 @@
   name: 'all other security controller actions'
   uriPattern: 'accounts(/{@action}.{@format})'
   defaults:
-    '@package':    'TYPO3.UserManagement'
+    '@package':    'TYPO3.AccountManagement'
     '@controller': 'Account'
     '@action':     'index'
     '@format':     'html'
@@ -14,7 +14,7 @@
   name: 'Account action'
   uriPattern: 'account/{account}/{@action}.{@format}'
   defaults:
-    '@package':    'TYPO3.UserManagement'
+    '@package':    'TYPO3.AccountManagement'
     '@controller': 'Account'
     '@action':     'show'
     '@format':     'html'

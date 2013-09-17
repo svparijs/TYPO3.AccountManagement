@@ -1,5 +1,5 @@
 <?php
-namespace TYPO3\UserManagement\Validation\Validator;
+namespace TYPO3\AccountManagement\Validation\Validator;
 
 /*                                                                        *
  * This script belongs to the TYPO3 Flow package "TYPO3.UserManagement".  *

@@ -1,5 +1,5 @@
 <?php
-namespace TYPO3\UserManagement\Service;
+namespace TYPO3\AccountManagement\Service;
 
 /*                                                                        *
  * This script belongs to the TYPO3 Flow package "TYPO3.UserManagement".  *

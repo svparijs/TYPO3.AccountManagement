@@ -1,6 +1,6 @@
 resources:
   methods:
-    TYPO3_UserManagementAccountMethods: 'method(TYPO3\UserManagement\Controller\AccountController->.*())'
+    TYPO3_AccountManagementAccountMethods: 'method(TYPO3\AccountManagement\Controller\AccountController->.*())'
 
 roles:
   Administrator: []
@@ -8,4 +8,4 @@ roles:
 acls:
   Administrator:
     methods:
-      TYPO3_UserManagementAccountMethods: GRANT
+      TYPO3_AccountManagementAccountMethods: GRANT

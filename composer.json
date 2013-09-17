@@ -1,5 +1,5 @@
 {
-	"name": "typo3/usermanagement",
+	"name": "typo3/accountmanagement",
 	"type": "typo3-flow-package",
 	"description": "",
 	"require": {
@@ -10,7 +10,7 @@
 	},
 	"autoload": {
 		"psr-0": {
-			"TYPO3\\UserManagement": "Classes"
+			"TYPO3\\AccountManagement": "Classes"
 		}
 	}
 }

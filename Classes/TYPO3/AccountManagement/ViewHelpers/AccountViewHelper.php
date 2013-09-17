@@ -1,5 +1,5 @@
 <?php
-namespace TYPO3\UserManagement\ViewHelpers;
+namespace TYPO3\AccountManagement\ViewHelpers;
 
 /*                                                                        *
  * This script belongs to the TYPO3 Flow package "TYPO3.UserManagement".  *

@@ -1,5 +1,5 @@
 <?php
-namespace TYPO3\UserManagement\Command;
+namespace TYPO3\AccountManagement\Command;
 
 /*                                                                        *
  * This script belongs to the TYPO3 Flow framework.                       *
@@ -25,7 +25,7 @@ class AccountCommandController extends \TYPO3\Flow\Cli\CommandController {
 
 	/**
 	 * @Flow\Inject
-	 * @var \TYPO3\UserManagement\Service\AccountManagementService
+	 * @var \TYPO3\AccountManagement\Service\AccountManagementService
 	 */
 	protected $accountManagementService;
 
@@ -36,9 +36,9 @@ class AccountCommandController extends \TYPO3\Flow\Cli\CommandController {
 	protected $persistenceManager;
 
 	/**
-	 * Create a new user
+	 * Create a new account
 	 *
-	 * This command creates a new user which has access to the backend user interface.
+	 * This command creates a new Account which has access to the backend Account interface.
 	 * It is recommended to user the email address as a username.
 	 *
 	 * @param string $username The username of the user to be created.
@@ -62,11 +62,11 @@ class AccountCommandController extends \TYPO3\Flow\Cli\CommandController {
 	}
 
 	/**
-	 * Remove a user
+	 * Remove a account
 	 *
 	 * This command removes a user which has access to the backend user interface.
 	 *
-	 * @param string $identifier The username of the user to be removed.
+	 * @param string $identifier The username of the account to be removed.
 	 * @param string $authenticationProvider The name of the authentication provider to use
 	 * @return void
 	 */
@@ -83,7 +83,7 @@ class AccountCommandController extends \TYPO3\Flow\Cli\CommandController {
 	}
 
 	/**
-	 * Set a new password for the given user
+	 * Set a new password for the given account
 	 *
 	 * This allows for setting a new password for an existing user account.
 	 *
@@ -115,7 +115,7 @@ class AccountCommandController extends \TYPO3\Flow\Cli\CommandController {
 	 * @param string $identifierFilter A filter string, matching the "LIKE" requirements for Repositories. Case-insensitive.
 	 * @param integer $limit The maximum amount of accounts shown
 	 * @return void
-	 * @see typo3.usermanagement:account:show
+	 * @see typo3.accountmanagement:account:show
 	 */
 	public function listCommand($identifierFilter = NULL, $limit = 100) {
 
@@ -150,7 +150,7 @@ class AccountCommandController extends \TYPO3\Flow\Cli\CommandController {
 	 * @param string $identifier The account identifier to show information about
 	 * @param string $authenticationProvider The name of the authentication provider. Can be left out if account identifier is unambiguous
 	 * @return void
-	 * @see typo3.usermanagement:account:list
+	 * @see typo3.accountmanagement:account:list
 	 */
 	public function showCommand($identifier, $authenticationProvider = NULL) {
 		$account = $this->accountManagementService->getAccount($identifier, $authenticationProvider);
@@ -191,8 +191,8 @@ class AccountCommandController extends \TYPO3\Flow\Cli\CommandController {
 	 * @param string $role The name of the role to add
 	 * @param string $authenticationProvider The name of the authentication provider. Can be left out if account identifier is unambiguous
 	 * @return void
-	 * @see typo3.usermanagement:account:show
-	 * @see typo3.usermanagement:account:removeRole
+	 * @see typo3.accountmanagement:account:show
+	 * @see typo3.accountmanagement:account:removeRole
 	 */
 	public function addRoleCommand($identifier, $role, $authenticationProvider = NULL) {
 		$account = $this->accountManagementService->getAccount($identifier, $authenticationProvider);
@@ -226,8 +226,8 @@ class AccountCommandController extends \TYPO3\Flow\Cli\CommandController {
 	 * @param string $role The name of the role to remove
 	 * @param string $authenticationProvider The name of the authentication provider. Can be left out if account identifier is unambiguous
 	 * @return void
-	 * @see typo3.usermanagement:account:show
-	 * @see typo3.usermanagement:account:addRole
+	 * @see typo3.accountmanagement:account:show
+	 * @see typo3.accountmanagement:account:addRole
 	 */
 	public function removeRoleCommand($identifier, $role, $authenticationProvider = NULL) {
 		$account = $this->accountManagementService->getAccount($identifier, $authenticationProvider);
