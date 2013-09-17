@@ -25,9 +25,9 @@ class AccountCommandController extends \TYPO3\Flow\Cli\CommandController {
 
 	/**
 	 * @Flow\Inject
-	 * @var \TYPO3\Flow\Security\AccountRepository
+	 * @var \TYPO3\UserManagement\Service\AccountManagementService
 	 */
-	protected $accountRepository;
+	protected $accountManagementService;
 
 	/**
 	 * @Flow\Inject
@@ -36,10 +36,75 @@ class AccountCommandController extends \TYPO3\Flow\Cli\CommandController {
 	protected $persistenceManager;
 
 	/**
-	 * @Flow\Inject
-	 * @var \TYPO3\Flow\Security\Policy\PolicyService
+	 * Create a new user
+	 *
+	 * This command creates a new user which has access to the backend user interface.
+	 * It is recommended to user the email address as a username.
+	 *
+	 * @param string $username The username of the user to be created.
+	 * @param string $password Password of the user to be created
+	 * @param string $firstName First name of the user to be created
+	 * @param string $lastName Last name of the user to be created
+	 * @param string $roles A comma separated list of roles to assign
+	 * @param string $authenticationProvider The name of the authentication provider to use
+	 * @return void
 	 */
-	protected $policyService;
+	public function createCommand($username, $password, $firstName, $lastName, $roles, $authenticationProvider = 'DefaultProvider') {
+
+		$result = $this->accountManagementService->createUser($username, $password, $firstName, $lastName, $roles, $authenticationProvider);
+
+		if ($result instanceof \TYPO3\Flow\Security\Account) {
+			$this->outputLine('Created account "%s".', array($username));
+		} else {
+			$this->outputLine('User "%s" already exists.', array($username));
+			$this->quit(1);
+		}
+	}
+
+	/**
+	 * Remove a user
+	 *
+	 * This command removes a user which has access to the backend user interface.
+	 *
+	 * @param string $identifier The username of the user to be removed.
+	 * @param string $authenticationProvider The name of the authentication provider to use
+	 * @return void
+	 */
+	public function removeCommand($identifier, $authenticationProvider = 'DefaultProvider') {
+
+		$result = $this->accountManagementService->removeUser($identifier, $authenticationProvider);
+
+		if (!$result) {
+			$this->outputLine('User "%s" does not exist.', array($identifier));
+			$this->quit(1);
+		} else {
+			$this->outputLine('User "%s" is removed.', array($identifier));
+		}
+	}
+
+	/**
+	 * Set a new password for the given user
+	 *
+	 * This allows for setting a new password for an existing user account.
+	 *
+	 * @param string $username Username of the account to modify
+	 * @param string $password The new password
+	 * @param string $authenticationProvider The name of the authentication provider to use
+	 * @return void
+	 */
+	public function setPasswordCommand($username, $password, $authenticationProvider = 'DefaultProvider') {
+
+		$account = $this->accountManagementService->getAccount($username, $authenticationProvider);
+
+		if (!$account instanceof \TYPO3\Flow\Security\Account) {
+			$this->outputLine('User "%s" does not exists.', array($username));
+			$this->quit(1);
+		}
+
+		$this->accountManagementService->setResetPassword($account, $password);
+
+		$this->outputLine('The new password for user "%s" was set.', array($username));
+	}
 
 	/**
 	 * Lists the Accounts of this installation
@@ -53,11 +118,8 @@ class AccountCommandController extends \TYPO3\Flow\Cli\CommandController {
 	 * @see typo3.usermanagement:account:show
 	 */
 	public function listCommand($identifierFilter = NULL, $limit = 100) {
-		$query = $this->accountRepository->createQuery();
-		if ($identifierFilter !== NULL) {
-			$query->matching($query->like('accountIdentifier', $identifierFilter, FALSE));
-		}
-		$result = $query->execute();
+
+		$result = $this->accountManagementService->getAccountList($identifierFilter, $limit);
 
 		$this->outputLine('Creation date            Expiration date          Auth. prov. name     Identifier');
 		$this->outputLine('------------------------ ------------------------ -------------------- -------------');
@@ -91,7 +153,7 @@ class AccountCommandController extends \TYPO3\Flow\Cli\CommandController {
 	 * @see typo3.usermanagement:account:list
 	 */
 	public function showCommand($identifier, $authenticationProvider = NULL) {
-		$account = $this->getAccountByIdentifierOrAuthenticationProviderName($identifier, $authenticationProvider);
+		$account = $this->accountManagementService->getAccount($identifier, $authenticationProvider);
 
 		$this->outputLine('Identifier:              %s', array($account->getAccountIdentifier()));
 		$this->outputLine('Authentication Provider: %s', array($account->getAuthenticationProviderName()));
@@ -133,12 +195,13 @@ class AccountCommandController extends \TYPO3\Flow\Cli\CommandController {
 	 * @see typo3.usermanagement:account:removeRole
 	 */
 	public function addRoleCommand($identifier, $role, $authenticationProvider = NULL) {
-		$account = $this->getAccountByIdentifierOrAuthenticationProviderName($identifier, $authenticationProvider);
+		$account = $this->accountManagementService->getAccount($identifier, $authenticationProvider);
+
 		try {
-			$role = $this->policyService->getRole($role);
+			$role = $this->accountManagementService->getRole($role);
 		} catch (NoSuchRoleException $exception) {
 			try {
-				$role = $this->policyService->createRole($role);
+				$role = $this->accountManagementService->createRole($role);
 			} catch (RoleExistsException $exception) {
 				$this->outputLine('Error: %s', array($exception->getMessage()));
 				$this->quit(1);
@@ -153,7 +216,7 @@ class AccountCommandController extends \TYPO3\Flow\Cli\CommandController {
 			$this->quit(1);
 		} else {
 			$account->addRole($role);
-			$this->accountRepository->update($account);
+			$this->accountManagementService->updateAccount($account);
 			$this->outputLine('Role has been added to the Account.');
 		}
 	}
@@ -167,9 +230,10 @@ class AccountCommandController extends \TYPO3\Flow\Cli\CommandController {
 	 * @see typo3.usermanagement:account:addRole
 	 */
 	public function removeRoleCommand($identifier, $role, $authenticationProvider = NULL) {
-		$account = $this->getAccountByIdentifierOrAuthenticationProviderName($identifier, $authenticationProvider);
+		$account = $this->accountManagementService->getAccount($identifier, $authenticationProvider);
+
 		try {
-			$role = $this->policyService->getRole($role);
+			$role = $this->accountManagementService->getRole($role);
 		} catch (NoSuchRoleException $exception) {
 			$this->outputLine('Error: The given role does not exist.');
 			$this->quit(1);
@@ -180,37 +244,9 @@ class AccountCommandController extends \TYPO3\Flow\Cli\CommandController {
 			$this->quit(1);
 		} else {
 			$account->removeRole($role);
-			$this->accountRepository->update($account);
+			$this->accountManagementService->updateAccount($account);
 			$this->outputLine('Role has been removed from the Account.');
 		}
-	}
-
-	/**
-	 * Tries to find an account by its identifier only
-	 * If this is ambiguous due to multiple authentication provider names, or if no Account could be found at all, the CLI execution is halted.
-	 *
-	 * @param string $identifier
-	 * @param string $authenticationProvider
-	 * @return \TYPO3\Flow\Security\Account
-	 */
-	protected function getAccountByIdentifierOrAuthenticationProviderName($identifier, $authenticationProvider = NULL) {
-		if ($authenticationProvider !== NULL) {
-			$account = $this->accountRepository->findByAccountIdentifierAndAuthenticationProviderName($identifier, $authenticationProvider);
-		} else {
-			$accounts = $this->accountRepository->findByAccountIdentifier($identifier);
-			if ($accounts->count() > 1) {
-				$this->outputFormatted('The given account identifier is ambiguous across multiple authentication providers. Please call the command again with the intended authentication provider name.');
-				$this->quit(1);
-			}
-			$account = $accounts->getFirst();
-		}
-
-		if ($account === NULL) {
-			$this->outputLine('No Account could be found.');
-			$this->quit(1);
-		}
-
-		return $account;
 	}
 
 }
