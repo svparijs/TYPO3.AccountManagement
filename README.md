@@ -1,4 +1,4 @@
-TYPO3.UserManagement [![Build Status](https://travis-ci.org/svparijs/TYPO3.UserManagement.png?branch=master)](https://travis-ci.org/svparijs/TYPO3.UserManagement)
+TYPO3.AccountManagement [![Build Status](https://travis-ci.org/svparijs/TYPO3.AccountManagement.png?branch=master)](https://travis-ci.org/svparijs/TYPO3.AccountManagement)
 ==================================================================================================================================================================
 
 A TYPO3 Flow package that manages accounts and login authentication.
@@ -39,7 +39,7 @@ To be able to address the login feature you will need to add these routes in the
 	  uriPattern: '<SecuritySubroutes>'
 	  subRoutes:
 	    SecuritySubroutes:
-	      package: TYPO3.UserManagement
+	      package: TYPO3.AccountManagement
 
 ####Create Account
 
@@ -83,7 +83,7 @@ The javascript that will handle your Action calls.
 
 The link that will trigger the login panel:
 
-	<a class="login-panel" data-toggle="modal" data-target="#modal-login" href="{f:uri.action(controller:'Login', action: 'loginPanel', package: 'TYPO3.UserManagement')}">Login Action</a>
+	<a class="login-panel" data-toggle="modal" data-target="#modal-login" href="{f:uri.action(controller:'Login', action: 'loginPanel', package: 'TYPO3.AccountManagement')}">Login Action</a>
 
 The modal that will be displayed:
 
@@ -95,27 +95,27 @@ Account ViewHelper
 
 Add the viewhelper to fluid and call the viewhelper function.
 
-	{namespace secure=TYPO3\UserManagement\ViewHelpers}
+	{namespace secure=TYPO3\AccountManagement\ViewHelpers}
 
 	<secure:account propertyPath="party.name" />
 
 Security walk-through
 ---------------------
 
-The way the TYPO3.Flow framework enables us to secure packages makes it easy to incorporate the TYPO3.UserManagement package with its authentication features.
-For an example heres how the TYPO3.UserManagement packages secures itself agains unauthorized access.
+The way the TYPO3.Flow framework enables us to secure packages makes it easy to incorporate the TYPO3.AccountManagement package with its authentication features.
+For an example heres how the TYPO3.AccountManagement packages secures itself agains unauthorized access.
 
 	resources:
 	  methods:
-	    TYPO3_UserManagementSignedInMethods: 'method(TYPO3\UserManagement\Controller\LoginController->(signedIn)Action())'
-	    TYPO3_UserManagementAccountMethods: 'method(TYPO3\UserManagement\Controller\RegisterController->(index|new|edit|update|delete)Action())'
+	    TYPO3_AccountManagementSignedInMethods: 'method(TYPO3\AccountManagement\Controller\LoginController->(signedIn)Action())'
+	    TYPO3_AccountManagementAccountMethods: 'method(TYPO3\AccountManagement\Controller\RegisterController->(index|new|edit|update|delete)Action())'
 	roles:
 	  Editor: []
 	acls:
 	  Editor:
 	    methods:
-	      TYPO3_UserManagementSignedInMethods: GRANT
-	      TYPO3_UserManagementAccountMethods: GRANT
+	      TYPO3_AccountManagementSignedInMethods: GRANT
+	      TYPO3_AccountManagementAccountMethods: GRANT
 
 When the action is unauthorized the TYPO3.Flow framework will redirect the package to a location set with the Settings.yaml configuration.
 
@@ -128,7 +128,7 @@ When the action is unauthorized the TYPO3.Flow framework will redirect the packa
 	            entryPoint: 'WebRedirect'
 	            entryPointOptions:
 	              routeValues:
-                    '@package': 'TYPO3.UserManagement'
+                    '@package': 'TYPO3.AccountManagement'
                     '@controller': 'Login'
                     '@action': 'index'
 
