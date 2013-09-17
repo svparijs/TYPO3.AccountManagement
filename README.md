@@ -1,29 +1,18 @@
 TYPO3.AccountManagement [![Build Status](https://travis-ci.org/svparijs/TYPO3.AccountManagement.png?branch=master)](https://travis-ci.org/svparijs/TYPO3.AccountManagement)
 ==================================================================================================================================================================
 
-A TYPO3 Flow package that manages accounts and login authentication.
+A TYPO3 Flow package that manages accounts.
 
-This User Management tool is a lightweight single purpose authentication wrapper around a given package.
-In addition it handles all user CRUD actions.
+This Account Management tool is a lightweight single purpose account management wrapper around a given package.
+It handles all account & role CRUD actions.
 The package is built on same features that are provided in the security framework of TYPO3.Flow and require only a little
 configuration.
 
 Usage:
-- Security layer for any application
-- User Management for any application
+- Account Management for any application (Flow, Neos)
+- Account CRUD
+- Role CRUD
 - Inspiration
-
-Authentication setup
---------------------
-
-The initial view will show a login box.
-
-When authenticated but not configured, the package will redirect to the signedInAction by default.
-The signedIn view will show you with what "account.identifier" you have been authenticated.
-
-Through Settings.yaml you will be able to configure options like redirects to a package, open registration for anonymous users
-and so on. The package and its features will grow overtime if there is enough usage and are generic use cases to be applied. Feel
-free to contribute, fork or leave a note.
 
 Quickstart
 ----------
@@ -32,13 +21,13 @@ This section will get you up and running.
 
 #####Routing
 
-To be able to address the login feature you will need to add these routes in the general Configuration/Routes.yaml
+To be able to address the Account Management you will need to add these routes in the general Configuration/Routes.yaml
 
 	-
-	  name: 'Security'
-	  uriPattern: '<SecuritySubroutes>'
+	  name: 'AccountManagement'
+	  uriPattern: '<AccountManagementSubroutes>'
 	  subRoutes:
-	    SecuritySubroutes:
+	    AccountManagementSubroutes:
 	      package: TYPO3.AccountManagement
 
 ####Create Account
@@ -50,101 +39,30 @@ There are 2 ways to create a user with this package, through the CLI and through
 	./flow help account:create
 	./flow account:create --username user1 --password newPassword --first-name John --last-name Doe --roles Administrator
 
-#####Usage through the frontend:
 
-[Not working yet]
-The package will notice that there are no accounts yet, and will redirect you to a registration page where you can create your first account.
+### PACKAGE "TYPO3.ACCOUNTMANAGEMENT" CLI Commands
 
-	http://localhost/login
+	PACKAGE "TYPO3.ACCOUNTMANAGEMENT":
+	-------------------------------------------------------------------------------
 
-[Not working yet]
+	account:create                           Create a new account
+	account:remove                           Remove a account
+	account:setpassword                      Set a new password for the given account
+	account:list                             Lists the Accounts of this installation
+	account:show                             Shows particular data for a given Account
+	account:addrole
+	account:removerole
 
-####First authentication
-
-Now you will be able to login. Use the credentials you filled in at this url (if your not already there).
-
-	http://localhost/login
-
-After signing in you will be redirected to the "Signed In Dummy" page, this page is to show that all the functionality works as intended.
-Later on in this README you will see how to redirect to a page of your choice.
-
-####List Account
-
-####Edit Account
-
-Login Panel
------------
-
-Add the following lines of code to your application to get the Login Panel, (pre-requirements are you have jQuery, Bootstrap and jQuery.form loaded).
-
-The javascript that will handle your Action calls.
-
-	<script src="resource://Beech.Ehrm/Public/JavaScript/Login.js"></script>
-
-The link that will trigger the login panel:
-
-	<a class="login-panel" data-toggle="modal" data-target="#modal-login" href="{f:uri.action(controller:'Login', action: 'loginPanel', package: 'TYPO3.AccountManagement')}">Login Action</a>
-
-The modal that will be displayed:
-
-	<div class="modal hide fade" id="modal-login">
-    </div>
+	role:list                                Lists the Roles of this installation
+	role:create                              Create a role with the given identifier
+	role:show                                Shows information about a Role, like a hint about the source or its parent roles.
+	role:exists                              Tells whether a Role for the given identifier exists
 
 Account ViewHelper
 ------------------
 
 Add the viewhelper to fluid and call the viewhelper function.
 
-	{namespace secure=TYPO3\AccountManagement\ViewHelpers}
+	{namespace account=TYPO3\AccountManagement\ViewHelpers}
 
-	<secure:account propertyPath="party.name" />
-
-Security walk-through
----------------------
-
-The way the TYPO3.Flow framework enables us to secure packages makes it easy to incorporate the TYPO3.AccountManagement package with its authentication features.
-For an example heres how the TYPO3.AccountManagement packages secures itself agains unauthorized access.
-
-	resources:
-	  methods:
-	    TYPO3_AccountManagementSignedInMethods: 'method(TYPO3\AccountManagement\Controller\LoginController->(signedIn)Action())'
-	    TYPO3_AccountManagementAccountMethods: 'method(TYPO3\AccountManagement\Controller\RegisterController->(index|new|edit|update|delete)Action())'
-	roles:
-	  Editor: []
-	acls:
-	  Editor:
-	    methods:
-	      TYPO3_AccountManagementSignedInMethods: GRANT
-	      TYPO3_AccountManagementAccountMethods: GRANT
-
-When the action is unauthorized the TYPO3.Flow framework will redirect the package to a location set with the Settings.yaml configuration.
-
-	TYPO3:
-	  Flow:
-	    security:
-	      authentication:
-	        providers:
-	          DefaultProvider:
-	            entryPoint: 'WebRedirect'
-	            entryPointOptions:
-	              routeValues:
-                    '@package': 'TYPO3.AccountManagement'
-                    '@controller': 'Login'
-                    '@action': 'index'
-
-Securing your package
----------------------
-
-To secure your package from unauthorized access you will need to add some policies in your Configuration/Policy.yaml.
-
-	resources:
-	  methods:
-	    MyCompany_PackageSomeAutherizedMethods: 'method(MyCompany\Package\Controller\DummyController->(index|show)Action())'
-	roles:
-	  Editor: []
-	acls:
-	  Editor:
-	    methods:
-	      MyCompany_PackageSomeAutherizedMethods: GRANT
-
-See for reference: http://flow.typo3.org/documentation/guide/partiii/security.html
+	<account:account propertyPath="party.name" />
