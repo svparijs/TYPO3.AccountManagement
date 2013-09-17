@@ -1,12 +1,4 @@
 TYPO3:
-  Flow:
-    persistence:
-      doctrine:
-        eventListeners:
-          -
-            events: ['postPersist', 'postUpdate', 'postRemove']
-            listener: 'TYPO3\Neos\Domain\EventListener\AccountPostEventListener'
-
   Neos:
     moduleConfiguration:
       widgetTemplatePathAndFileName: 'resource://TYPO3.Neos/Private/Templates/Module/Widget.html'

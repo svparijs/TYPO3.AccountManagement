@@ -31,9 +31,7 @@ before_script:
   - source build-environment/install-helper.sh
   - git clone git://git.typo3.org/Flow/Distributions/Base.git Flow
   # Symlink the package to the folder that its gonna go
-  # [Replace Package key here]
-  - mkdir -p Flow/Packages/Application && cd Flow/Packages/Application && ln -s ../../../TYPO3.AccountManagement && cd ../../
-  # [Replace Package key here]
+  - mkdir -p Flow/Packages/Application && cd Flow/Packages/Application && ln -s ../../../TYPO3.AccountManagement && cd ../../ # [Replace Package key here]
   # Get most recent composer
   - composer self-update
   - composer install --dev
@@ -46,11 +44,10 @@ script:
   # Install Prerequirements
   - phpunit -c Build/BuildEssentials/PhpUnit/UnitTests.xml && phpunit -c Build/BuildEssentials/PhpUnit/FunctionalTests.xml
   - if [[ "$DB" == "mysql" ]]; then ./flow doctrine:migrate --quiet && ./flow doctrine:migrate --version 0 --quiet ; fi
-  - echo "Framework Tested."
   - phpunit -c Build/PhpUnit/UnitTests.xml && phpunit -c Build/PhpUnit/FunctionalTests.xml
-  # [Replace Package key here]
-  - cd ../TYPO3.AccountManagement
-  # [Replace Package key here]
+
+  - cd ../TYPO3.AccountManagement # [Replace Package key here]
+
   - pear channel-discover pear.typo3.org
   - pear channel-discover pear.phpmd.org
   - pear channel-discover pear.pdepend.org
@@ -63,8 +60,8 @@ script:
   - phpenv rehash
   - mkdir .reports
   # Lint
-  #- find Classes -name '*.php' -exec php -l {} \;
-  #- if [ -d Tests ]; then find Tests -name '*.php' -exec php -l {} \; fi
+  - find Classes -name '*.php' -exec php -l {} \;
+  - find Tests -name '*.php' -exec php -l {} \; fi
   # Mess detection
   #- phpmd Classes xml .buildessentials/PhpMd/Flow.xml --reportfile .reports/pmd.xml &> /dev/null
   # Duplicate code
