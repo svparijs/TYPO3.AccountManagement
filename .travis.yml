@@ -75,7 +75,7 @@ script:
   - pdepend --jdepend-xml=.reports/jdepend.xml --jdepend-chart=.reports/dependencies.svg --overview-pyramid=.reports/pyramid.svg Classes
   # Code sniffer
   - phpcs --standard=FLOW3 --extensions=php Classes
-  - if [ -d Tests ]; then phpcs --standard=FLOW3 --extensions=php  Tests fi
+  - phpcs --standard=FLOW3 --extensions=php Tests
 
 # configure notifications (email, IRC, campfire etc)
 notifications:
