@@ -61,7 +61,7 @@ script:
   - mkdir .reports
   # Lint
   - find Classes -name '*.php' -exec php -l {} \;
-  - find Tests -name '*.php' -exec php -l {} \; fi
+  - find Tests -name '*.php' -exec php -l {} \;
   # Mess detection
   #- phpmd Classes xml .buildessentials/PhpMd/Flow.xml --reportfile .reports/pmd.xml &> /dev/null
   # Duplicate code
