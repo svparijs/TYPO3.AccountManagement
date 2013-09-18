@@ -1,0 +1,47 @@
+<fieldset>
+	<legend>Personal Data</legend>
+
+	<div class="row">
+		<div class="small-12">
+			<div class="row">
+				<div class="small-3 columns">
+					<label for="title" class="right inline">Title</label>
+				</div>
+				<div class="small-9 columns">
+					<f:form.textfield property="party.name.title" id="title" />
+					<small class="error">Name is required and must be a string.</small>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="small-12">
+			<div class="row">
+				<div class="small-3 columns">
+					<label for="firstName" class="right inline">First Name <small>required</small></label>
+				</div>
+				<div class="small-9 columns">
+					<f:form.textfield property="party.name.firstName" id="firstName" placeholder="First Name..." />
+					<small class="error">First name is required and must be a string.</small>
+					<f:form.textfield property="party.name.middleName" id="middleName" placeholder="Middle Name" />
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="small-12">
+			<div class="row">
+				<div class="small-3 columns">
+					<label for="lastName" class="right inline">Last Name <small>required</small></label>
+				</div>
+				<div class="small-9 columns">
+					<f:form.textfield property="party.name.lastName" id="lastName" placeholder="Last Name..." />
+					<small class="error">Last Name is required and must be a string.</small>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</fieldset>

@@ -1,5 +1,5 @@
 <?php
-namespace TYPO3\AccountManagement\ViewHelpers;
+namespace TYPO3\AccountManagement\Controller;
 
 /*                                                                        *
  * This script belongs to the TYPO3 Flow package "TYPO3.UserManagement".  *
@@ -14,30 +14,33 @@ namespace TYPO3\AccountManagement\ViewHelpers;
 use TYPO3\Flow\Annotations as Flow;
 
 /**
- * Shows the name of the currently active user
+ * Account controller for the TYPO3.UserManagement package
+ *
+ * @Flow\Scope("singleton")
  */
-class AccountViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
+class RoleController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 
 	/**
-	 * @var \TYPO3\Flow\Security\Context
 	 * @Flow\Inject
+	 * @var \TYPO3\Flow\Security\Policy\PolicyService
 	 */
-	protected $securityContext;
+	protected $policyService;
 
 	/**
-	 * @param string $propertyPath
-	 * @return string
+	 * Shows a list of registers
+	 *
+	 * @return void
 	 */
-	public function render($propertyPath = 'party.name') {
-		$tokens = $this->securityContext->getAuthenticationTokens();
+	public function indexAction() {
+		$this->view->assign('roles', $this->policyService->getRoles());
+	}
 
-		foreach ($tokens as $token) {
-			if ($token->isAuthenticated()) {
-				return (string)\TYPO3\Flow\Reflection\ObjectAccess::getPropertyPath($token->getAccount(), $propertyPath);
-			}
-		}
-
-		return '';
+	/**
+	 * @param \TYPO3\Flow\Security\Policy\Role $role
+	 * @return void
+	 */
+	public function showAction(\TYPO3\Flow\Security\Policy\Role $role) {
+		$this->view->assign('role', $role);
 	}
 }
 

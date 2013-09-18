@@ -1,0 +1,35 @@
+{namespace secure=TYPO3\AccountManagement\ViewHelpers}
+<f:layout name="Default" />
+
+<f:section name="Title">Account Roles</f:section>
+
+<f:section name="Content">
+	<f:render partial="FlashMessages" />
+	<f:if condition="{roles}">
+		<f:then>
+			<f:link.action class="right button radius" action="new"><i class="icon-user icon-white"></i> New role</f:link.action>
+			<h2>Role list</h2>
+			<table class="table">
+				<tr>
+					<th width="25%">Type</th>
+					<th width="25%">Role Identifier</th>
+					<th width="30%">Role</th>
+				</tr>
+				<f:for each="{roles}" key="roleIdentifier" as="role">
+					<tr>
+						<td class="center">({role.sourceHint})</td>
+						<td>
+							<f:link.action action="show" arguments="{role:role}">{roleIdentifier}</f:link.action>
+						</td>
+						<td>
+							{role}
+						</td>
+					</tr>
+				</f:for>
+			</table>
+		</f:then>
+		<f:else>
+			<p>There are no roles configured, your system is probably not configured correctly.</p>
+		</f:else>
+	</f:if>
+</f:section>

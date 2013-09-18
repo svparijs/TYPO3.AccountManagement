@@ -22,6 +22,12 @@ class AccountController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 
 	/**
 	 * @Flow\Inject
+	 * @var \TYPO3\AccountManagement\Service\AccountManagementService
+	 */
+	protected $accountManagementService;
+
+	/**
+	 * @Flow\Inject
 	 * @var \TYPO3\Flow\Security\AccountRepository
 	 */
 	protected $accountRepository;
@@ -65,11 +71,6 @@ class AccountController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			$propertyMappingConfigurationForAccount = $this->arguments->getArgument('account')->getPropertyMappingConfiguration();
 			$propertyMappingConfigurationForAccountParty = $propertyMappingConfigurationForAccount->forProperty('party');
 			$propertyMappingConfigurationForAccountPartyName = $propertyMappingConfigurationForAccount->forProperty('party.name');
-			$propertyMappingConfigurationForAccountParty->setTypeConverterOption(
-				'TYPO3\Flow\Property\TypeConverter\PersistentObjectConverter',
-				\TYPO3\Flow\Property\TypeConverter\PersistentObjectConverter::CONFIGURATION_TARGET_TYPE,
-				'\TYPO3\UserManagement\Domain\Model\User'
-			);
 
 			foreach (array($propertyMappingConfigurationForAccountParty, $propertyMappingConfigurationForAccountPartyName) as $propertyMappingConfiguration) {
 				$propertyMappingConfiguration->setTypeConverterOption(
@@ -136,7 +137,7 @@ class AccountController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 * @return void
 	 */
 	public function createAction($identifier, array $password, $email, $firstName, $lastName, $roles) {
-		$user = new \TYPO3\UserManagement\Domain\Model\User();
+
 		$name = new \TYPO3\Party\Domain\Model\PersonName('', $firstName, '', $lastName, '', $identifier);
 		$user->setName($name);
 		$electrinocAddress = new \TYPO3\Party\Domain\Model\ElectronicAddress();
@@ -154,13 +155,85 @@ class AccountController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	}
 
 	/**
+	 * @return void
+	 */
+	public function profileAction() {
+		$tokens = $this->securityContext->getAuthenticationTokens();
+
+		foreach ($tokens as $token) {
+			if ($token->isAuthenticated()) {
+				$account = $this->accountManagementService->getAccount((string)\TYPO3\Flow\Reflection\ObjectAccess::getPropertyPath($token->getAccount(), 'accountidentifier'));
+			}
+		}
+
+		if ($account instanceof \TYPO3\Flow\Security\Account) {
+			$this->view->assign('account', $account);
+		}
+
+		$this->view->assign('roles', $this->policyService->getRoles());
+	}
+
+	/**
 	 * Shows a form for editing an existing register object
 	 *
 	 * @param \TYPO3\Flow\Security\Account $account
 	 * @return void
 	 */
-	public function editAction(\TYPO3\Flow\Security\Account $account) {
+	public function editAction() {
+		$tokens = $this->securityContext->getAuthenticationTokens();
+
+		foreach ($tokens as $token) {
+			if ($token->isAuthenticated()) {
+				$account = $this->accountManagementService->getAccount((string)\TYPO3\Flow\Reflection\ObjectAccess::getPropertyPath($token->getAccount(), 'accountidentifier'));
+			}
+		}
+
+		if ($account instanceof \TYPO3\Flow\Security\Account) {
+			$this->view->assign('account', $account);
+		}
+
 		$this->view->assign('account', $account);
+	}
+
+	/**
+	 * Shows a form for editing an existing register object
+	 *
+	 * @param \TYPO3\Flow\Security\Account $account
+	 * @return void
+	 */
+	public function editPermissionsAction() {
+		$tokens = $this->securityContext->getAuthenticationTokens();
+
+		foreach ($tokens as $token) {
+			if ($token->isAuthenticated()) {
+				$account = $this->accountManagementService->getAccount((string)\TYPO3\Flow\Reflection\ObjectAccess::getPropertyPath($token->getAccount(), 'accountidentifier'));
+			}
+		}
+
+		if ($account instanceof \TYPO3\Flow\Security\Account) {
+			$this->view->assign('account', $account);
+		}
+
+		$this->view->assign('account', $account);
+		$this->view->assign('roles', $this->policyService->getRoles());
+	}
+
+	/**
+	 * @return void
+	 */
+	public function resetPasswordAction() {
+		$tokens = $this->securityContext->getAuthenticationTokens();
+
+		foreach ($tokens as $token) {
+			if ($token->isAuthenticated()) {
+				$account = $this->accountManagementService->getAccount((string)\TYPO3\Flow\Reflection\ObjectAccess::getPropertyPath($token->getAccount(), 'accountidentifier'));
+			}
+		}
+
+		if ($account instanceof \TYPO3\Flow\Security\Account) {
+			$this->view->assign('account', $account);
+		}
+
 		$this->view->assign('roles', $this->policyService->getRoles());
 	}
 
@@ -168,16 +241,24 @@ class AccountController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 * Updates the given account object
 	 *
 	 * @param \TYPO3\Flow\Security\Account $account
-	 * @param array $password
-	 * @Flow\Validate(argumentName="password", type="\TYPO3\UserManagement\Validation\Validator\PasswordValidator", options={ "allowEmpty"=1, "minimum"=1, "maximum"=255 })
 	 * @return void
-	 * @todo Handle validation errors for account (accountIdentifier) & check if there's another account with the same accountIdentifier when changing it
 	 */
-	public function updateAction(\TYPO3\Flow\Security\Account $account, array $password = array()) {
-		$password = array_shift($password);
-		if (strlen(trim(strval($password))) > 0) {
-			$account->setCredentialsSource($this->hashService->hashPassword($password, 'default'));
-		}
+	public function updateAction(\TYPO3\Flow\Security\Account $account) {
+
+		$this->accountRepository->update($account);
+		$this->partyRepository->update($account->getParty());
+
+		$this->addFlashMessage('The user profile has been updated.');
+		$this->redirect('index');
+	}
+
+	/**
+	 * Updates the given account object
+	 *
+	 * @param \TYPO3\Flow\Security\Account $account
+	 * @return void
+	 */
+	public function updatePasswordAction(\TYPO3\Flow\Security\Account $account) {
 
 		$this->accountRepository->update($account);
 		$this->partyRepository->update($account->getParty());
@@ -210,9 +291,7 @@ class AccountController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			$redirect = $this->settings['Redirect']['backToLink'];
 			$this->redirect($redirect['actionName'], $redirect['controllerName'], $redirect['packageKey']);
 		}
-		$this->redirect('signedIn', 'Login');
 	}
-
 }
 
 ?>

@@ -1,6 +1,7 @@
 #                                                                        #
-# Default routes configuration for the Security.Manager package          #
+# Default routes configuration for the AccountManager package          #
 #                                                                        #
+
 -
   name: 'all other security controller actions'
   uriPattern: 'accounts(/{@action}.{@format})'
@@ -10,6 +11,27 @@
     '@action':     'index'
     '@format':     'html'
 
+-
+  name: 'All roles actions'
+  uriPattern: 'roles(/{@action}.{@format})'
+  defaults:
+    '@package':    'TYPO3.AccountManagement'
+    '@controller': 'Role'
+    '@action':     'index'
+    '@format':     'html'
+
+-
+  name: 'Show role'
+  uriPattern: 'roles/{role}/{@action}.{@format}'
+  defaults:
+    '@package':    'TYPO3.AccountManagement'
+    '@controller': 'Role'
+    '@action':     'index'
+    '@format':     'html'
+  routeParts:
+    role:
+      objectType:  \TYPO3\Flow\Security\Policy\Role
+      uriPattern:  '{roleIdentifier}'
 -
   name: 'Account action'
   uriPattern: 'account/{account}/{@action}.{@format}'

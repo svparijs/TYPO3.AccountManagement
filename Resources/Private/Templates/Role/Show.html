@@ -1,0 +1,13 @@
+<f:layout name="Default" />
+
+<f:section name="Title">Show Role "{role.roleIdentifier}"</f:section>
+
+<f:section name="Content">
+	<ul class="breadcrumbs">
+		<li><f:link.action controller="Role" action="index">Roles</f:link.action></li>
+		<li class="current"><a href="#">{role}</a></li>
+	</ul>
+
+	<p class="right"><f:link.action class="button" action="show" arguments="{role: role}"><i class="icon-pencil icon-white"></i> Edit</f:link.action></p>
+
+</f:section>

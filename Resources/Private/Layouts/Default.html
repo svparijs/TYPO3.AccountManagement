@@ -5,20 +5,28 @@
 		<title><f:render section="Title" /></title>
 		<f:base />
 
-		<link rel="stylesheet" type="text/css" href="{f:uri.resource(path:'StyleSheets/bootstrap.css')}" />
-		<link rel="stylesheet" type="text/css" href="{f:uri.resource(path:'Library/fontawesome/css/font-awesome.css')}" />
-		<link rel="stylesheet" type="text/css" href="{f:uri.resource(path:'StyleSheets/application.css')}" />
+		<link rel="stylesheet" type="text/css" href="{f:uri.resource(path:'Styles/app.css')}" />
 	</head>
-	<body>
-	<div id="wrap">
-		<div class="container">
-			<f:render section="Content" />
-		</div>
-		<div id="push"></div>
-	</div>
 
-	<f:render partial="Footer" />
-	<f:render partial="Modals" />
-	<f:render section="Script" />
+	<body>
+		<div id="root">
+			<div class="container">
+				<section id="typo3-account-management" class="row">
+					<div class="large-3 columns">
+						<f:render partial="Menu" arguments="{account: account}" />
+					</div>
+					<div class="large-9 columns">
+						<div class="panel">
+							<f:render section="Content" />
+						</div>
+						<p><f:link.action action="back">Back</f:link.action></p>
+					</div>
+				</section>
+			</div>
+			<div id="root_footer"></div>
+		</div>
+
+		<f:render partial="Footer" />
+		<f:render partial="Scripts" />
 	</body>
 </html>

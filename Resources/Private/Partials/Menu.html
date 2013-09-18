@@ -1,0 +1,40 @@
+{namespace account=TYPO3\AccountManagement\ViewHelpers}
+
+<div class="section-container accordion" data-section="accordion">
+	<section>
+		<p class="title" data-section-title>
+			<account:gravatar email="{account:account(propertyPath:'party.email')}" default="http://domain.com/gravatar_default.gif" class="gravatar" /><a href="#"><account:account propertyPath="party.name" /></a>
+		</p>
+		<div class="content" data-section-content>
+			<ul class="side-nav">
+				<li>
+					<f:link.action package="TYPO3.AccountManagement" controller="Account" action="profile">Profile</f:link.action>
+				</li>
+				<li>
+					<f:link.action package="TYPO3.AccountManagement" controller="Account" action="edit">Account Settings</f:link.action>
+				</li>
+				<li>
+					<f:link.action package="TYPO3.AccountManagement" controller="Account" action="editPermissions">Permissions</f:link.action>
+				</li>
+				<li>
+					<f:link.action package="TYPO3.AccountManagement" controller="Account" action="resetPassword">Reset Password</f:link.action>
+				</li>
+			</ul>
+		</div>
+	</section>
+	<section>
+		<p class="title" data-section-title>
+			<a href="#">Account Management</a>
+		</p>
+		<div class="content" data-section-content>
+			<ul class="side-nav">
+				<li>
+					<f:link.action controller="Account" action="index">Account list</f:link.action>
+				</li>
+				<li>
+					<f:link.action controller="Role" action="index">Role configuration</f:link.action>
+				</li>
+			</ul>
+		</div>
+	</section>
+</div>

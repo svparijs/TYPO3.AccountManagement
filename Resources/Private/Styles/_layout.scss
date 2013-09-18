@@ -1,0 +1,29 @@
+html, body {
+	height: 100%;
+}
+
+// Sticky footer
+#root {
+	clear: both;
+	min-height: 100%;
+	height: auto !important;
+	height: 100%;
+	margin-bottom: -$footer-height;
+	#root_footer {
+		height: $footer-height;
+	}
+}
+
+footer {
+	clear: both;
+	position: relative;
+	height: $footer-height;
+}
+
+section#typo3-account-management {
+	padding: 55px 0 45px;
+}
+
+.center {
+	text-align: center;
+}

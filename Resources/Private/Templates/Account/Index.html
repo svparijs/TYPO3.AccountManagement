@@ -1,74 +1,38 @@
-<f:layout name="Default" />
 {namespace secure=TYPO3\AccountManagement\ViewHelpers}
+<f:layout name="Default" />
+
 <f:section name="Title">A list of Accounts</f:section>
 
 <f:section name="Content">
-	<div clas="row">
-		<div class="span12 list-alignment">
-			<f:render partial="FlashMessages" />
-			<f:if condition="{accounts}">
-				<f:then>
-					<table class="table table-striped">
-						<tr>
-							<th width="60%" colspan="6">
-								<f:link.action class="pull-right btn btn-success btn-large modal-action" action="new"><i class="icon-user icon-white"></i> Create account</f:link.action>
-								<h4><i class="icon-group"></i> Accounts</h4>
-							</th>
-						</tr>
-						<tr>
-							<th width="25%">Username</th>
-							<th width="30%">Full name</th>
-							<th width="15%">Creation Date</th>
-							<th width="15%">Roles</th>
-							<th width="10%">Status</th>
-							<th width="10%">Options</th>
-						</tr>
-						<f:for each="{accounts}" as="account">
-							<tr>
-								<td>
-									<f:link.action action="show" arguments="{account: account}">{account.accountidentifier}</f:link.action>
-								</td>
-								<td>
-									{account.party.name.fullName}
-								</td>
-								<td><f:format.date>{account.creationdate}</f:format.date></td>
-								<td><f:for each="{account.roles}" as="role">{role}</f:for></td>
-								<td><span class="label label-success">Active</span></td>
-								<td>
-									<div class="btn-group">
-										<button class="btn">Actions</button>
-										<button class="btn dropdown-toggle" data-toggle="dropdown">
-											<span class="caret"></span>
-										</button>
-										<ul class="dropdown-menu">
-											<!-- dropdown menu links -->
-											<li>
-												<f:link.action action="edit" arguments="{account: account}" class="modal-action"><i class="icon-edit"></i> Edit</f:link.action>
-											</li>
-											<f:if condition="<secure:account propertyPath='accountidentifier'/> != {account.accountidentifier}">
-												<f:then>
-													<li class="divider"></li>
-													<li>
-														<f:link.action action="delete" arguments="{account: account}" class="confirm" additionalAttributes="{data-confirm-header:'<i class=\"icon-user\"></i> Delete', data-confirm-message:'Are you sure you want to delete this item?'}"><i class="icon-trash"></i> Delete</f:link.action>
-													</li>
-												</f:then>
-											</f:if>
-										</ul>
-									</div>
-								</td>
-							</tr>
-						</f:for>
-					</table>
-				</f:then>
-				<f:else>
-					<p>No accounts registered yet.</p>
-				</f:else>
-			</f:if>
-			<p><f:link.action class="btn" action="back">Back</f:link.action></p>
-		</div>
-	</div>
-</f:section>
-
-<f:section name="Script">
-	<script src="{f:uri.resource(path: 'JavaScript/Application.js')}"></script>
+	<f:render partial="FlashMessages" />
+	<f:if condition="{accounts}">
+		<f:then>
+			<f:link.action class="right button radius" action="new"><i class="icon-user icon-white"></i> New account</f:link.action>
+			<h2>Account list</h2>
+			<table class="table">
+				<tr>
+					<th width="25%">Username</th>
+					<th width="30%">Full name</th>
+					<th width="15%">Creation Date</th>
+					<th width="10%">Status</th>
+					<th width="10%">Options</th>
+				</tr>
+				<f:for each="{accounts}" as="account">
+					<tr>
+						<td>
+							<f:link.action action="show" arguments="{account: account}">{account.accountidentifier}</f:link.action>
+						</td>
+						<td>
+							{account.party.name.fullName}
+						</td>
+						<td><f:format.date>{account.creationdate}</f:format.date></td>
+						<td><span class="label label-success">Active</span></td>
+					</tr>
+				</f:for>
+			</table>
+		</f:then>
+		<f:else>
+			<p>No accounts registered yet.</p>
+		</f:else>
+	</f:if>
 </f:section>
