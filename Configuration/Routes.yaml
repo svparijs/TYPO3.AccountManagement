@@ -3,6 +3,15 @@
 #                                                                        #
 
 -
+  name: 'All Profile methods'
+  uriPattern: 'profile(/{@action}.{@format})'
+  defaults:
+    '@package':    'TYPO3.AccountManagement'
+    '@controller': 'Profile'
+    '@action':     'profile'
+    '@format':     'html'
+
+-
   name: 'all other security controller actions'
   uriPattern: 'accounts(/{@action}.{@format})'
   defaults:
@@ -33,7 +42,7 @@
       objectType:  \TYPO3\Flow\Security\Policy\Role
       uriPattern:  '{roleIdentifier}'
 -
-  name: 'Account action'
+  name: 'Profile action'
   uriPattern: 'account/{account}/{@action}.{@format}'
   defaults:
     '@package':    'TYPO3.AccountManagement'

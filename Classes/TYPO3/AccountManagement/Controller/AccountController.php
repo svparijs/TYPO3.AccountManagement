@@ -2,7 +2,7 @@
 namespace TYPO3\AccountManagement\Controller;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "TYPO3.UserManagement".  *
+ * This script belongs to the TYPO3 Flow package "TYPO3.AccountManagement"*
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU General Public License, either version 3 of the   *
@@ -14,7 +14,7 @@ namespace TYPO3\AccountManagement\Controller;
 use TYPO3\Flow\Annotations as Flow;
 
 /**
- * Account controller for the TYPO3.UserManagement package
+ * Account controller for the TYPO3.AccountManagement package
  *
  * @Flow\Scope("singleton")
  */
@@ -155,67 +155,13 @@ class AccountController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	}
 
 	/**
-	 * @return void
-	 */
-	public function profileAction() {
-		$tokens = $this->securityContext->getAuthenticationTokens();
-
-		foreach ($tokens as $token) {
-			if ($token->isAuthenticated()) {
-				$account = $this->accountManagementService->getAccount((string)\TYPO3\Flow\Reflection\ObjectAccess::getPropertyPath($token->getAccount(), 'accountidentifier'));
-			}
-		}
-
-		if ($account instanceof \TYPO3\Flow\Security\Account) {
-			$this->view->assign('account', $account);
-		}
-
-		$this->view->assign('roles', $this->policyService->getRoles());
-	}
-
-	/**
 	 * Shows a form for editing an existing register object
 	 *
 	 * @param \TYPO3\Flow\Security\Account $account
 	 * @return void
 	 */
-	public function editAction() {
-		$tokens = $this->securityContext->getAuthenticationTokens();
-
-		foreach ($tokens as $token) {
-			if ($token->isAuthenticated()) {
-				$account = $this->accountManagementService->getAccount((string)\TYPO3\Flow\Reflection\ObjectAccess::getPropertyPath($token->getAccount(), 'accountidentifier'));
-			}
-		}
-
-		if ($account instanceof \TYPO3\Flow\Security\Account) {
-			$this->view->assign('account', $account);
-		}
-
+	public function editAction(\TYPO3\Flow\Security\Account $account) {
 		$this->view->assign('account', $account);
-	}
-
-	/**
-	 * Shows a form for editing an existing register object
-	 *
-	 * @param \TYPO3\Flow\Security\Account $account
-	 * @return void
-	 */
-	public function editPermissionsAction() {
-		$tokens = $this->securityContext->getAuthenticationTokens();
-
-		foreach ($tokens as $token) {
-			if ($token->isAuthenticated()) {
-				$account = $this->accountManagementService->getAccount((string)\TYPO3\Flow\Reflection\ObjectAccess::getPropertyPath($token->getAccount(), 'accountidentifier'));
-			}
-		}
-
-		if ($account instanceof \TYPO3\Flow\Security\Account) {
-			$this->view->assign('account', $account);
-		}
-
-		$this->view->assign('account', $account);
-		$this->view->assign('roles', $this->policyService->getRoles());
 	}
 
 	/**
@@ -233,8 +179,6 @@ class AccountController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 		if ($account instanceof \TYPO3\Flow\Security\Account) {
 			$this->view->assign('account', $account);
 		}
-
-		$this->view->assign('roles', $this->policyService->getRoles());
 	}
 
 	/**
@@ -244,21 +188,6 @@ class AccountController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 * @return void
 	 */
 	public function updateAction(\TYPO3\Flow\Security\Account $account) {
-
-		$this->accountRepository->update($account);
-		$this->partyRepository->update($account->getParty());
-
-		$this->addFlashMessage('The user profile has been updated.');
-		$this->redirect('index');
-	}
-
-	/**
-	 * Updates the given account object
-	 *
-	 * @param \TYPO3\Flow\Security\Account $account
-	 * @return void
-	 */
-	public function updatePasswordAction(\TYPO3\Flow\Security\Account $account) {
 
 		$this->accountRepository->update($account);
 		$this->partyRepository->update($account->getParty());
@@ -291,6 +220,7 @@ class AccountController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 			$redirect = $this->settings['Redirect']['backToLink'];
 			$this->redirect($redirect['actionName'], $redirect['controllerName'], $redirect['packageKey']);
 		}
+		$this->redirect('index');
 	}
 }
 

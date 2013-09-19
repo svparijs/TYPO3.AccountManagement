@@ -2,7 +2,7 @@
 namespace TYPO3\AccountManagement\Controller;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "TYPO3.UserManagement".  *
+ * This script belongs to the TYPO3 Flow package "TYPO3.AccountManagement"*
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU General Public License, either version 3 of the   *
@@ -12,9 +12,10 @@ namespace TYPO3\AccountManagement\Controller;
  *                                                                        */
 
 use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Flow\Security\Policy\Role;
 
 /**
- * Account controller for the TYPO3.UserManagement package
+ * Role controller for the TYPO3.AccountManagement package
  *
  * @Flow\Scope("singleton")
  */
@@ -36,10 +37,12 @@ class RoleController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	}
 
 	/**
-	 * @param \TYPO3\Flow\Security\Policy\Role $role
+	 * Show Role details
+	 *
+	 * @param Role $role
 	 * @return void
 	 */
-	public function showAction(\TYPO3\Flow\Security\Policy\Role $role) {
+	public function showAction(Role $role) {
 		$this->view->assign('role', $role);
 	}
 }

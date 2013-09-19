@@ -17,9 +17,10 @@
 					</div>
 					<div class="large-9 columns">
 						<div class="panel">
+							<f:render partial="FlashMessages" />
 							<f:render section="Content" />
 						</div>
-						<p><f:link.action action="back">Back</f:link.action></p>
+						<p><f:link.action controller="Account" action="back">Back</f:link.action></p>
 					</div>
 				</section>
 			</div>

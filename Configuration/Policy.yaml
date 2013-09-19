@@ -1,5 +1,6 @@
 resources:
   methods:
+    TYPO3_AccountManagementProfileMethods: 'method(TYPO3\AccountManagement\Controller\ProfileController->.*())'
     TYPO3_AccountManagementAccountMethods: 'method(TYPO3\AccountManagement\Controller\AccountController->.*())'
     TYPO3_AccountManagementRoleMethods: 'method(TYPO3\AccountManagement\Controller\RoleController->.*())'
 
@@ -9,5 +10,6 @@ roles:
 acls:
   Administrator:
     methods:
+      TYPO3_AccountManagementProfileMethods: GRANT
       TYPO3_AccountManagementAccountMethods: GRANT
       TYPO3_AccountManagementRoleMethods: GRANT

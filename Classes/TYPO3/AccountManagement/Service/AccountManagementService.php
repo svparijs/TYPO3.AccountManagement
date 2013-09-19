@@ -58,6 +58,12 @@ class AccountManagementService {
 	protected $policyService;
 
 	/**
+	 * @var \TYPO3\Flow\Security\Context
+	 * @Flow\Inject
+	 */
+	protected $securityContext;
+
+	/**
 	 * Create a new user
 	 *
 	 * This command creates a new user which has access to the backend user interface.
@@ -115,17 +121,34 @@ class AccountManagementService {
 	}
 
 	/**
+	 * Get Signed in account
+	 *
+	 * @param string $authenticationProvider The name of the authentication provider to use
+	 * @return mixed $account
+	 */
+	public function getProfile($authenticationProvider = 'DefaultProvider'){
+		$tokens = $this->securityContext->getAuthenticationTokens();
+
+		foreach ($tokens as $token) {
+			if ($token->isAuthenticated()) {
+				$account = $this->getAccount((string)\TYPO3\Flow\Reflection\ObjectAccess::getPropertyPath($token->getAccount(), 'accountidentifier'), $authenticationProvider);
+			}
+		}
+		return $account;
+	}
+
+	/**
 	 * Set a new password for the given account
 	 *
 	 * This allows for setting a new password for an existing user account.
 	 *
 	 * @param Account $account
 	 * @param $password
-	 * @param string $type
+	 * @param string $passwordHashingStrategy
 	 */
-	public function setResetPassword(Account $account, $password, $type = 'default') {
+	public function resetPassword(Account $account, $password, $passwordHashingStrategy = 'default') {
 
-		$account->setCredentialsSource($this->hashService->hashPassword($password, $type));
+		$account->setCredentialsSource($this->hashService->hashPassword($password, $passwordHashingStrategy));
 		$this->accountRepository->update($account);
 	}
 
