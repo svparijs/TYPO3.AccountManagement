@@ -101,7 +101,7 @@ class AccountCommandController extends \TYPO3\Flow\Cli\CommandController {
 			$this->quit(1);
 		}
 
-		$this->accountManagementService->setResetPassword($account, $password);
+		$this->accountManagementService->resetPassword($account, $password);
 
 		$this->outputLine('The new password for user "%s" was set.', array($username));
 	}
