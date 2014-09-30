@@ -51,7 +51,7 @@ class AccountCommandController extends \TYPO3\Flow\Cli\CommandController {
 	 * @return void
 	 */
 	public function createCommand($username, $password, $firstName, $lastName, $roles, $middleName='', $authenticationProvider = 'DefaultProvider') {
-		$this->outputLine('attempt');
+
 		$result = $this->accountManagementService->createUser($username, $password, $firstName, $middleName, $lastName, $roles, $authenticationProvider);
 
 		if ($result instanceof \TYPO3\Flow\Security\Account) {
