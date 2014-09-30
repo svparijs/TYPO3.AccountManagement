@@ -44,14 +44,15 @@ class AccountCommandController extends \TYPO3\Flow\Cli\CommandController {
 	 * @param string $username The username of the user to be created.
 	 * @param string $password Password of the user to be created
 	 * @param string $firstName First name of the user to be created
+	 * @param string $middleName Middle name of the user to be created (optional)
 	 * @param string $lastName Last name of the user to be created
 	 * @param string $roles A comma separated list of roles to assign
 	 * @param string $authenticationProvider The name of the authentication provider to use
 	 * @return void
 	 */
-	public function createCommand($username, $password, $firstName, $lastName, $roles, $authenticationProvider = 'DefaultProvider') {
-
-		$result = $this->accountManagementService->createUser($username, $password, $firstName, $lastName, $roles, $authenticationProvider);
+	public function createCommand($username, $password, $firstName, $lastName, $roles, $middleName='', $authenticationProvider = 'DefaultProvider') {
+		$this->outputLine('attempt');
+		$result = $this->accountManagementService->createUser($username, $password, $firstName, $middleName, $lastName, $roles, $authenticationProvider);
 
 		if ($result instanceof \TYPO3\Flow\Security\Account) {
 			$this->outputLine('Created account "%s".', array($username));

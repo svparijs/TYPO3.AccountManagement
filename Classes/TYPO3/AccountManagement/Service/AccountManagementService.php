@@ -72,12 +72,13 @@ class AccountManagementService {
 	 * @param string $username The username of the user to be created.
 	 * @param string $password Password of the user to be created
 	 * @param string $firstName First name of the user to be created
+	 * @param string $middleName Middle name of the user to be created
 	 * @param string $lastName Last name of the user to be created
 	 * @param string $roles A comma separated list of roles to assign
 	 * @param string $authenticationProvider The name of the authentication provider to use
 	 * @return void
 	 */
-	public function createUser($username, $password, $firstName, $lastName, $roles, $authenticationProvider = 'DefaultProvider') {
+	public function createUser($username, $password, $firstName, $middleName = '', $lastName, $roles, $authenticationProvider = 'DefaultProvider') {
 		$account = $this->accountRepository->findByAccountIdentifierAndAuthenticationProviderName($username, $authenticationProvider);
 		if ($account instanceof \TYPO3\Flow\Security\Account) {
 				// Return exception
@@ -85,7 +86,7 @@ class AccountManagementService {
 		}
 
 		$user = new \TYPO3\Party\Domain\Model\Person;
-		$name = new \TYPO3\Party\Domain\Model\PersonName('', $firstName, '', $lastName, '', $username);
+		$name = new \TYPO3\Party\Domain\Model\PersonName('', $firstName, $middleName, $lastName, '', $username);
 		$user->setName($name);
 
 		$this->partyRepository->add($user);
