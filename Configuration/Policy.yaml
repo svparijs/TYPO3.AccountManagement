@@ -1,12 +1,11 @@
+
 resources:
   methods:
     TYPO3_AccountManagementProfileMethods: 'method(TYPO3\AccountManagement\Controller\ProfileController->.*())'
     TYPO3_AccountManagementAccountMethods: 'method(TYPO3\AccountManagement\Controller\AccountController->.*())'
     TYPO3_AccountManagementRoleMethods: 'method(TYPO3\AccountManagement\Controller\RoleController->.*())'
-
 roles:
-  Administrator: []
-
+  Administrator: {  }
 acls:
   Administrator:
     methods:
