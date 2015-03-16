@@ -1,14 +1,24 @@
+privilegeTargets:
+  'TYPO3\Flow\Security\Authorization\Privilege\Method\MethodPrivilege':
 
-resources:
-  methods:
-    TYPO3_AccountManagementProfileMethods: 'method(TYPO3\AccountManagement\Controller\ProfileController->.*())'
-    TYPO3_AccountManagementAccountMethods: 'method(TYPO3\AccountManagement\Controller\AccountController->.*())'
-    TYPO3_AccountManagementRoleMethods: 'method(TYPO3\AccountManagement\Controller\RoleController->.*())'
+    'TYPO3.AccountManagement:ProfileActions':
+      matcher: 'method(TYPO3\AccountManagement\Controller\ProfileController->.*())'
+
+    'TYPO3.AccountManagement:AccountActions':
+      matcher: 'method(TYPO3\AccountManagement\Controller\AccountController->.*())'
+
+    'TYPO3.AccountManagement:RoleActions':
+      matcher: 'method(TYPO3\AccountManagement\Controller\RoleController->.*())'
+
 roles:
-  Administrator: {  }
-acls:
-  Administrator:
-    methods:
-      TYPO3_AccountManagementProfileMethods: GRANT
-      TYPO3_AccountManagementAccountMethods: GRANT
-      TYPO3_AccountManagementRoleMethods: GRANT
+  'TYPO3.AccountManagement:Administrator':
+    privileges:
+      -
+        privilegeTarget: 'TYPO3.AccountManagement:ProfileActions'
+        permission: GRANT
+      -
+        privilegeTarget: 'TYPO3.AccountManagement:AccountActions'
+        permission: GRANT
+      -
+        privilegeTarget: 'TYPO3.AccountManagement:RoleActions'
+        permission: GRANT
